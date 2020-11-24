@@ -1,0 +1,137 @@
+.navbarcontainer {
+    width: 1280px;
+    margin: 0 auto;
+    height: 75px;
+}
+
+a {
+    padding: 26px 22px;
+    color: #808a94;
+}
+
+.logo {
+    padding: 0;
+}
+
+.nuxt-link-exact-active {
+    border-bottom: 2px solid #46c5f1;
+    color: #021d26;
+    font-weight: bold;
+}
+
+.footer-bg {
+    background-color:  #021d26;
+}
+
+.buttonnav {
+    width: 150px;
+    padding: 10px 25px;
+    background-color: #46c5f1;
+    border-radius: 4%;
+    color: white;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: .3s ease-in-out;
+}
+
+.buttonnav:hover {
+    background-color: #65d5fa;
+    transition: .3s ease-in-out;
+}
+
+.lines {
+    width: 30px;
+}
+
+.lines .open {
+    margin-right: 10px;
+}
+
+.one, .two, .three{
+    height: 3px;
+    border-bottom-left-radius: 2px;
+    border-bottom-right-radius: 2px;
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+    background: #021d26;
+    -webkit-transform: rotate(0) translate(0);
+    transform: rotate(0) translate(0);
+    -webkit-transition: all .3s ease-in-out;
+    transition: all .3s ease-in-out;
+}
+
+.two {
+    margin: 7px 0;
+}
+
+.hamburgerrechts {
+    position: absolute;
+    right: 0;
+}
+
+.open .lines .one {
+    transform: rotate(-45deg) translate(-9px,0px);
+}
+
+.open .lines .two {
+    transform: translate(-20px,0);
+    opacity: 0;
+}
+
+.open .lines .three {
+    transform: rotate(45deg) translate(-12px,-5px);
+}
+
+.menu-collapse {
+    width: 0;
+    height: 0;
+    background-color: #fff;
+    opacity: 1;
+}
+
+.menu-collapse.opennav {
+    height: 500px;
+    z-index: 49;
+    background-color: #fff;
+    opacity: 1;
+}
+
+.mobile-menu .toggle.open .lines {
+    width: 31px;
+    margin-right: 10px;
+    border-radius: 2px;
+}
+
+.absoluteright {
+    position: absolute;
+    right: 0;
+}
+
+.hide {
+    display: none;
+}
+
+.hide.openlink {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.mobilelink {
+    border-bottom: none;
+}
+
+.mobilelink.nuxt-link-exact-active::before {
+    content: "";
+    background-color: #46c5f1;
+    border-radius: 100%;
+    padding: 0 6px;
+    margin-right: 10px;
+    font-size: 8px;
+    margin-top: -12px;
+}
+
+.mobile {
+    padding: 10px;
+}
