@@ -1,13 +1,14 @@
 <template>
-    <div class="w-full mx-auto navbar">
+    <div class="w-full navbar">
         <div class="navbarcontainer w-full flex">
-          <div class="flex items-center lg:w-3/12 md:w-1/12">
+          <div class="flex justify-center">
+            <div class="flex items-center lg:w-2/12 w-full">
               <a class="logo" href="/">
                 <Logosm />
               </a>
             </div>
-            <div class="flex items-center justify-start md:w-6/12 w-full">
-                <nav class="hidden md:flex">
+            <div class="flex items-center lg:w-6/12">
+                <nav class="hidden lg:flex">
                     <ul class="flex menu">
                         <li>
                             <NuxtLink to="/" v-for="(home, index) in allHomepaginas" :key="index">
@@ -41,7 +42,14 @@
                         </li>
                     </ul>
                 </nav>
-                <nav class="absoluteright md:hidden block w-1/2">
+                <div v-if="ingelogd">
+                  <div class="w-2/12 hidden lg:flex" v-for="(data, index) in allIngelogds" :key="index">
+                    <button @click="uitloggen" class="downloadbtn">
+                      {{ data.uitloggenKnop }}
+                    </button>
+                  </div>
+                </div>
+                <nav class="absoluteright lg:hidden block w-1/2">
                   <div class="text-right ml-auto h-full">
                     <div class="w-full flex justify-end items-center h-full">
                       <div :class="{'open':showNav}" class="toggle justify-end h-full flex items-center">
@@ -56,7 +64,7 @@
                 </nav>
             </div>
         </div>
-        <div :class="{'opennav': showNav}" class="block md:hidden menu-collapse">
+        <div :class="{'opennav': showNav}" class="block lg:hidden menu-collapse">
           <nav class="flex flex-wrap items-center relative w-auto">
             <ul :class="{'openlink': showNav}" class="hide flex-wrap">
               <li class="mobile">
@@ -92,19 +100,45 @@
             </ul>
           </nav>
         </div>
+        </div>
     </div>
 </template>
 <script>
 
 import gql from 'graphql-tag';
+import firebase from 'firebase/app'
+import 'firebase/auth'
 
 export default {
   name: "navbar",
 
   data: () => {
     return {
-      showNav: false
+      showNav: false,
+      uitloggenknop: false,
+      ingelogd: false
     } 
+  },
+  mounted() {
+    firebase.auth().onAuthStateChanged((user) => {
+      if(user) {
+        this.ingelogd = true;
+      } else {
+        this.ingelogd = false;
+      }
+    })
+  },
+  methods: {
+    async uitloggen() {
+      try {
+        const data = await firebase.auth().signOut();
+        console.log(data);
+        this.$router.replace({name: 'reserveren'})
+        this.ingelogd = false;
+      } catch {
+
+      }
+    },
   },
     apollo: {
     allHomepaginas: gql`{
@@ -173,6 +207,15 @@ export default {
         }
       }
     }`,
+    allIngelogds: gql`{
+      allIngelogds {
+          titeltekst {
+              titel
+              tekst
+          }
+          uitloggenKnop
+        }
+    }`
   },
 }
 

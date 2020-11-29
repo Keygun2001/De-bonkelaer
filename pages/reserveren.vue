@@ -31,7 +31,7 @@
                                 </div>
                             </div>
                         </form>
-                        <div class="error" v-if="error">{{ error.message }}</div>
+                        <div class="rodetekst">{{ error }}</div>
                     </div>
                 </div>
             </div>
@@ -52,18 +52,17 @@ export default {
         return {
             email: '',
             password: '',
-            error: ''
+            error: '',
         }
     },
 
     methods: {
         async pressed() {
             try {
-                const val = await firebase.auth().signInWithEmailAndPassword(this.email, this.password);
-                console.log(val);
+                await firebase.auth().signInWithEmailAndPassword(this.email, this.password);
                 this.$router.replace({name: "ingelogd"})
             }catch(err){
-                console.log(err)
+                this.error = "Uw Email/Wachtwoord is onjuist"
             };
         }
     },

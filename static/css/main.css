@@ -49,20 +49,13 @@ p {
 
 .inputbox {
   border: solid 1px black;
+  padding: 5px 10px;
 }
 
 .submit {
   border: solid 1px black;
   padding: 5px;
 }
-
-input[type=text] {
-  padding: 5px 10px;
-}
-
-input[type=password] {
-  padding: 5px 10px;
-} 
 
 .next {
   right: 0;
@@ -91,4 +84,21 @@ input[type=password] {
 .downloadbtn:hover {
   background-color: #65d5fa;
   transition: .3s ease-in-out;
+}
+
+.grijzetext {
+  color: #808a94;
+}
+
+.banen {
+  padding: 10px;
+  border: solid 1px #000;
+}
+
+.rodetekst {
+  color: red;
+}
+
+.groenetekst {
+  color: lime;
 }
