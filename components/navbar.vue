@@ -49,58 +49,70 @@
                     </button>
                   </div>
                 </div>
-                <nav class="absoluteright lg:hidden block w-1/2">
-                  <div class="text-right ml-auto h-full">
-                    <div class="w-full flex justify-end items-center h-full">
-                      <div :class="{'open':showNav}" class="toggle justify-end h-full flex items-center">
-                        <div @click="showNav = !showNav" class="lines z-50">
-                          <div class="one"></div>
-                          <div class="two"></div>
-                          <div class="three"></div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </nav>
             </div>
         </div>
-        <div :class="{'opennav': showNav}" class="block lg:hidden menu-collapse">
-          <nav class="flex flex-wrap items-center relative w-auto">
-            <ul :class="{'openlink': showNav}" class="hide flex-wrap">
-              <li class="mobile">
-                  <NuxtLink class="mobilelink" to="/" v-for="(home, index) in allHomepaginas" :key="index">
-                      {{ home.contentmatrix[0].titel }}
-                  </NuxtLink>
-              </li>
-              <li class="mobile">
-                  <NuxtLink class="mobilelink" to='/actueel' v-for="(actueel, index) in allActueels" :key="index">
-                      {{ actueel.contentmatrix[0].titel }}
-                  </NuxtLink>
-              </li>
-              <li class="mobile">
-                  <NuxtLink class="mobilelink" to='/tarieven' v-for="(tarieven, index) in allTarievens" :key="index">
-                      {{ tarieven.titel }}
-                  </NuxtLink>
-              </li>
-              <li class="mobile">
-                  <NuxtLink class="mobilelink" to='/reserveren' v-for="(reserveren, index) in allReserverens" :key="index">
-                      {{ reserveren.contentmatrix[0].titel }}
-                  </NuxtLink>
-              </li>
-              <li class="mobile">
-                  <NuxtLink class="mobilelink" to='/reglement' v-for="(reglementen, index) in allReglements" :key="index">
-                      {{ reglementen.contentmatrix[0].titel }}
-                  </NuxtLink>
-              </li>
-              <li class="mobile">
-                  <NuxtLink class="mobilelink" to='/impressies' v-for="(impressies, index) in allImpressies" :key="index">
-                      {{ impressies.contentmatrix[0].titel }}
-                  </NuxtLink>
-              </li>
-            </ul>
+        <div class="lg:w-1/12 w-full">
+          <nav class="mobile-menu absolute pin-r50 lg:hidden block w-1/2">
+            <div class="text-right ml-auto h-full">
+              <div class="w-full flex justify-end items-center h-full">
+                <div :class="{'open':showNav}" class="toggle justify-end h-full flex items-center">
+                  <div @click="showNav = !showNav" class="lines z-50">
+                    <div class="one"></div>
+                    <div class="two"></div>
+                    <div class="three"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </nav>
+          <div :class="{'opennav': showNav}" class="menu-collapse flex flex-col">
+            <nav class="flex flex-wrap items-center relative w-auto">
+              <ul class="container">
+                <h2 v-for="(menu, index) in allMenus" :key="index" class="pb-4 pl-4">
+                  {{ menu.menuTitel }}
+                </h2>
+                <li class="mobile">
+                  <NuxtLink class="mobilelink" to="/" v-for="(home, index) in allHomepaginas" :key="index">
+                    {{ home.contentmatrix[0].titel }}
+                  </NuxtLink>
+                </li>
+                <li class="mobile">
+                  <NuxtLink class="mobilelink" to='/actueel' v-for="(actueel, index) in allActueels" :key="index">
+                    {{ actueel.contentmatrix[0].titel }}
+                  </NuxtLink>
+                </li>
+                <li class="mobile">
+                  <NuxtLink class="mobilelink" to='/tarieven' v-for="(tarieven, index) in allTarievens" :key="index">
+                    {{ tarieven.titel }}
+                  </NuxtLink>
+                </li>
+                <li class="mobile">
+                  <NuxtLink class="mobilelink" to='/reserveren' v-for="(reserveren, index) in allReserverens" :key="index">
+                    {{ reserveren.contentmatrix[0].titel }}
+                  </NuxtLink>
+                </li>
+                <li class="mobile">
+                  <NuxtLink class="mobilelink" to='/reglement' v-for="(reglementen, index) in allReglements" :key="index">
+                    {{ reglementen.contentmatrix[0].titel }}
+                  </NuxtLink>
+                </li>
+                <li class="mobile">
+                  <NuxtLink class="mobilelink" to='/impressies' v-for="(impressies, index) in allImpressies" :key="index">
+                    {{ impressies.contentmatrix[0].titel }}
+                  </NuxtLink>
+                </li>
+              </ul>
+            </nav>
+            <div v-if="ingelogd">
+              <div class="lg:hidden flex justify-center w-10/12 mt-8" v-for="(data, index) in allIngelogds" :key="index">
+                <button @click="uitloggen" class="downloadbtn">
+                  {{ data.uitloggenKnop }}
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
-        </div>
+      </div>
     </div>
 </template>
 <script>
@@ -147,6 +159,11 @@ export default {
           titel
           tekst
         }
+      }
+    }`,
+    allMenus: gql`{
+      allMenus{
+        menuTitel
       }
     }`,
     allActueels: gql`{
@@ -222,3 +239,4 @@ export default {
 </script>
 
 <style scoped src="~/static/css/navbar.css"> </style>
+<style scoped src="~/static/css/main.css"> </style>

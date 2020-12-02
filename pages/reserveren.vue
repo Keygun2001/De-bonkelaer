@@ -7,7 +7,7 @@
                         <h1>
                             {{ item.contentmatrix[0].titel }}
                         </h1>
-                        <p>
+                        <p class="mt-4">
                             {{ item.contentmatrix[0].tekst }}
                         </p>
                     </div>
@@ -27,7 +27,7 @@
                             </div>
                             <div class="w-9/12">
                                 <div class="mt-4 flex justify-end">
-                                    <input class="submit rounded" type="submit" value="Inloggen" />
+                                    <input class="downloadbtn rounded" type="submit" value="Inloggen" />
                                 </div>
                             </div>
                         </form>

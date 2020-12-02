@@ -2,8 +2,8 @@
     <div>
         <div class="bg-blue-900">
             <div class="container mx-auto">
-                <div class="flex justify-center items-center mx-auto w-10/12 py-32 border-grey-bottom">
-                    <div class="w-3/12">
+                <div class="flex md:justify-center md:items-center md:flex-no-wrap flex-wrap mx-auto md:w-10/12 w-full md:py-32 py-8 border-grey-bottom">
+                    <div class="md:w-3/12 w-full">
                         <div v-for="(footer, index) in footer" :key="index" class="w-24 leading-8">
                             <p class="text-white nuxtfooterlinkp">
                                 {{ footer[0].titel }}
@@ -25,19 +25,19 @@
                             </NuxtLink>
                         </div>
                     </div>
-                    <div class="w-9/12">
+                    <div class="md:w-9/12 w-full">
                         <div v-for="(footer, index) in footer" :key="index" class="leading-8">
                             <p class="text-white nuxtfooterlinkp">
                                 {{ footer[0].titel2 }}
                             </p>
-                            <div class="flex justify-center">
-                                <p class="mr-4 nuxtfooterlink">
+                            <div class="flex md:justify-center md:flex-no-wrap flex-wrap">
+                                <p class="mr-4 md:mt-0 mt-4 nuxtfooterlink">
                                     {{ footer[0].adres1 }}
                                 </p>
-                                <p class="mx-4 nuxtfooterlink">
+                                <p class="md:mx-4 mx-0 md:mt-0 mt-4 nuxtfooterlink">
                                     {{ footer[0].adres2 }}
                                 </p>
-                                <p class="ml-4 nuxtfooterlink">
+                                <p class="md:ml-4 ml-0 md:mt-0 mt-4 nuxtfooterlink">
                                     {{ footer[0].adres3 }}
                                 </p>
                             </div>
