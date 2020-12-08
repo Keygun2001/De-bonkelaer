@@ -84,6 +84,10 @@ a {
     transform: rotate(-45deg) translate(-9px,0px);
 }
 
+.menu--list {
+    z-index: 50;
+}
+
 .open .lines .two {
     transform: translate(-20px,0);
     opacity: 0;

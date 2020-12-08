@@ -1,9 +1,9 @@
 .container {
   width: 1200px;
-  @media only screen and (max-width: 1280px) {
-    width: 100%;
-    padding: 0 16px;
-}
+    @media only screen and (max-width: 1280px) {
+      width: 100%;
+      padding: 0 16px;
+  }
 }
   
 h1 {
@@ -54,6 +54,9 @@ p {
 .inputbox {
   border: solid 1px black;
   padding: 5px 10px;
+  @media only screen and (max-width: 768px) {
+    width: 90%;
+  }
 }
 
 .submit {
@@ -83,6 +86,7 @@ p {
   align-items: center;
   justify-content: center;
   transition: .3s ease-in-out;
+  z-index: 50;
 }
 
 .reservering {
@@ -99,6 +103,24 @@ p {
 }
 
 .reservering:hover {
+  background-color: #65d5fa;
+  transition: .3s ease-in-out;
+}
+
+.reserveringadmin {
+  width: 220px;
+  padding: 10px 25px;
+  background-color: #46c5f1;
+  border-radius: 4%;
+  color: white;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: .3s ease-in-out;
+}
+
+.reserveringadmin:hover {
   background-color: #65d5fa;
   transition: .3s ease-in-out;
 }
@@ -123,4 +145,63 @@ p {
 
 .groenetekst {
   color: lime;
+}
+
+.reserveringtable>tr>td {
+  border: solid 1px #ccd9e6;  
+  color: #808a94;
+  padding: 10px;
+}
+.reserveringtable>div>tr>td {
+  border: solid 1px #ccd9e6;  
+  color: #808a94;
+  padding: 10px;
+}
+
+.allreserveringen>div>tr>td {
+  border: solid 1px #ccd9e6;  
+  color: #808a94;
+  padding: 10px;
+}
+
+.kruis {
+  width: 30px;
+  cursor: pointer;
+}
+
+.een, .twee{
+  height: 3px;
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 2px;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+  background: red;
+}
+
+.een {
+  transform: rotate(-45deg) translate(-2px, 1px);
+}
+
+.twee {
+  transform: rotate(45deg) translate(0px,0px);
+}
+
+.rev {
+  display: revert;
+  flex-direction: row;
+  width: 100%;
+    @media only screen and (max-width: 1024px) {
+      display: flex;
+      flex-direction: column;
+      width: 50%;
+  }
+}
+
+.revall {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+    @media only screen and (max-width: 1024px) {
+      flex-direction: column;
+  }
 }

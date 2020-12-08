@@ -21,7 +21,7 @@
 
       <div class="container mx-auto">
         <div class="flex md:flex-row flex-col items-center mx-auto md:w-10/12 w-full md:py-32 py-8">
-          <div class="flex sm:flex-col md:flex-row md:w-6/12 w-full md:mr-4 mr-0">
+          <div class="md:flex hidden flex-row w-6/12 mr-4">
             <img :src="home.contentmatrix[1].afbeeldingnaasttekst.url">   
           </div>
           <div class="md:w-6/12 w-full md:mt-0 mt-8">
@@ -31,6 +31,9 @@
               <p class="leading-7 mt-4 md:w-10/12 w-full">
                 {{ home.contentmatrix[1].tekst }}
               </p>
+            </div>
+            <div class="md:hidden flex flex-col w-full">
+              <img :src="home.contentmatrix[1].afbeeldingnaasttekst.url">   
             </div>
         </div>
       </div>

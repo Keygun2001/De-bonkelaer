@@ -3,7 +3,7 @@
         <div v-for="(data, index) in allGebruikersToevoegens" :key="index">
             <div class="bg-blue-100 shadow-lg">
                 <div class="container mx-auto">
-                    <div class="mx-auto w-10/12 py-32">
+                    <div class="mx-auto md:w-10/12 w-full md:py-32 py-8">
                         <div class="md:w-6/12 w-full">
                             <h1>
                                 {{ data.paginaTitel }}

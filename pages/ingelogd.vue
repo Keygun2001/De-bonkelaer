@@ -3,8 +3,8 @@
         <div v-for="(data, index) in allIngelogds" :key="index">
             <div class="bg-blue-100 shadow-lg">
                 <div class="container mx-auto">
-                    <div class="flex md:flex-row flex-col items-center mx-auto w-10/12 py-32">
-                        <div class="md:w-6/12 w-full mr-4">
+                    <div class="flex items-center md:mx-auto w-10/12 md:py-32 py-8">
+                        <div class="md:w-6/12 w-full md:mr-4">
                             <h1>
                                 {{ data.titeltekst[0].titel }}
                             </h1>
@@ -12,11 +12,13 @@
                                 {{ data.titeltekst[0].tekst }} {{ voornaam }} {{ achternaam }}
                             </p>
                             <div class="mt-8">
-                                <div v-if="lidnummer == '9999'">
-                                    <NuxtLink to="/" class="reservering">{{ data.allreserveringen }}</NuxtLink>
+                                <div v-if="isAdmin">
+                                    <NuxtLink to="/allereserveringen" class="reserveringadmin">{{ data.allreserveringen }}</NuxtLink>
+                                    <NuxtLink to="/gebruikertoevoegen" class="reserveringadmin mt-4">{{ data.gebruikerToevoegen }}</NuxtLink>
+                                    <NuxtLink to="/mijnreservering" class="reservering mt-4">{{ data.mijnreserveringen }}</NuxtLink>
                                 </div>
                                 <div v-else>
-                                    <NuxtLink to="/" class="reservering">{{ data.mijnreserveringen }}</NuxtLink>
+                                    <NuxtLink to="/mijnreservering" class="reservering">{{ data.mijnreserveringen }}</NuxtLink>
                                 </div>
                             </div>
                         </div>
@@ -24,17 +26,17 @@
                 </div>
             </div>
             <div class="container mx-auto">
-                <div class="flex items-center mx-auto w-10/12 pt-32 mb-8">
+                <div class="flex items-center mx-auto md:w-10/12 w-full md:pt-32 pt-8 mb-8">
                     <div class="w-full">
                         <h1>
                             {{ data.titeltekst[1].titel }}
                         </h1>
-                        <p class="leading-7 mt-4 w-10/12">
+                        <p class="leading-7 mt-4 md:w-10/12 w-full">
                             {{ data.titeltekst[1].tekst }}
                         </p>
                     </div>
                 </div>
-                <div class="w-10/12 mx-auto">
+                <div class="md:w-10/12 w-full md:mx-auto">
                     <form @submit.prevent="reserveren">
                         <p>
                             {{ data.lidnummer }}
@@ -52,15 +54,17 @@
                         <p>
                             {{ data.medespeler }}
                         </p>
-                        <div class="my-4">
+                        <div class="my-4 flex flex-col md:inline md:flex-row">
                             <select v-model="medespeler1" class="inputbox rounded" required>
-                                <option v-for="(option, i) in medespelers" :key="i">{{ medespelers[i] }}</option>
+                                <option v-for="(option, i) in medespelers" :key="i" :selected="option">{{ medespelers[i] }}</option>
                             </select>
-                            <select v-model="medespeler2" class="inputbox rounded">
-                                <option v-for="(option, z) in medespelers" :key="z">{{ medespelers[z] }}</option>
-                            </select>
+                            <div class="md:py-0 py-4 md:inline flex md:flex-row flex-col">
+                                <select v-model="medespeler2" class="inputbox rounded">
+                                    <option selected="selected" v-for="(option, z) in medespelers" :key="z">{{ medespelers[z] }}</option>
+                                </select>
+                            </div>
                             <select v-model="medespeler3" class="inputbox rounded">
-                                <option v-for="(option, x) in medespelers" :key="x">{{ medespelers[x] }}</option>
+                                <option selected="selected" v-for="(option, x) in medespelers" :key="x">{{ medespelers[x] }}</option>
                             </select>
                         </div>
                         <p class="my-4">
@@ -98,20 +102,20 @@ export default {
             events: ['click', 'mousemove', 'mousedown', 'scroll', 'keypress', 'load'],
             logoutTimer: "",
             datum: '',
-            court: '',
+            court: 'baan1',
             email: firebase.auth().currentUser.email,
             voornaam: '',
             achternaam: '',
             lidnummer: '',
+            isAdmin: false,
             medespelers: [],
-            medespeler1: '',
-            medespeler2: '',
-            medespeler3: '',
+            medespeler1: '-',
+            medespeler2: '-',
+            medespeler3: '-',
             tijden: ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00'],
             beschikbaretijden: [],
             bezettetijden: [],
             gekozentijd: '',
-            dagen: ['Vandaag', 'Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag', 'Zaterdag', 'Zondag'],
             error: '',
             succesvol: ''
         }
@@ -119,7 +123,6 @@ export default {
 
      mounted() {
         self = this
-
         const gebruikersref = firebase.database().ref('Gebruikers/')
         gebruikersref.once('value', function(snapshot){
             var email = self.email
@@ -129,6 +132,7 @@ export default {
             const medespelers = [];
             var voornamen = ''
             var lidnummers = ''
+            var isAdmin = false
 
             snapshot.forEach(function(childSnapshot){
                 const data = childSnapshot.exportVal();
@@ -139,9 +143,47 @@ export default {
                     self.voornaam = data.Voornaam;
                     self.achternaam = data.Achternaam;
                     self.lidnummer = data.Lidnummer;
+                    self.isAdmin = data.IsAdmin
                 }
             });
             self.medespelers = medespelers; 
+        });
+
+        const reserveringsref = firebase.database().ref('Reserveringen/')
+        reserveringsref.once('value', function(snapshot){
+
+            const timestamp = firebase.firestore.Timestamp.fromDate(new Date());
+            const timestampday = timestamp.toDate().getUTCDate()
+            const timestampmonth = timestamp.toDate().getUTCMonth() + 1
+            const timestampyear = timestamp.toDate().getUTCFullYear()
+
+            const timestamphours = timestamp.toDate().getUTCHours()
+
+            const timestampdate = timestampyear.toString() + "-" + timestampmonth.toString() + "-" + timestampday.toString()
+            const timestamptime = timestamphours.toString() + ":00"
+
+            var email = self.email
+            let datadatum = ""
+            let datatijd = ""
+
+            snapshot.forEach(function(childSnapshot){
+                const data = childSnapshot.val()
+                if(data.Email == email) {
+                    datatijd = data.Tijd
+                    datadatum = data.Datum
+                }
+            });
+            if(timestampdate >= datadatum) {
+                if(timestamptime == datatijd){
+                    const ref = firebase.database().ref('Reserveringen/')
+                    const abcd = ref.orderByChild('Lidnummer').equalTo(self.lidnummer);
+                    abcd.once('value', function(abcdSnap){
+                        var a = abcdSnap.val();
+                        var b = Object.keys(a)[0];
+                        ref.child(b).remove();
+                    })
+                }
+            }
         });
 
         this.events.forEach(function (event) {
@@ -152,25 +194,18 @@ export default {
     },
 
     methods: { 
-        opzeggen: function() {
-            const ref = firebase.database().ref('Reserveringen/')
-            const abcd = ref.orderByChild('Lidnummer').equalTo(this.lidnummer);
-            abcd.on('value', function(abcdSnap){
-                var a = abcdSnap.val();
-                var b = Object.keys(a)[0];
-                ref.child(b).remove();
-            })
-        },
 
         reserveren: function() {
             const reserveringref = firebase.database().ref('Reserveringen/')
             reserveringref.once('value', function(snapshot){
                 //get filled in data
+
+                const email = self.email
                 const lidnummer = self.lidnummer
                 const court = self.court
                 const medespeler1 = self.medespeler1
-                const medespeler2 = self.medespeler2
-                const medespeler3 = self.medespeler3
+                var medespeler2 = self.medespeler2
+                var medespeler3 = self.medespeler3
                 const datum = self.datum
                 const tijd = self.gekozentijd
 
@@ -233,40 +268,23 @@ export default {
                     self.error = "U heeft al een reservering in ons systeem staan."
                 }
                 else if(medespeler1 == datamedespeler1) {
-                    if(datamedespeler1 == "") {
+                    if(datamedespeler1 == "" || datamedespeler1 == "-") {
                         if(court == databaan) {
                           self.succesvol = 'baan beschikbaar'
-                          console.log(court)
                           if(datum == datadatum) {
                               self.succesvol = "datum beschikbaar"
-                              console.log(datum)
                               if(tijd == datatijd) {
                                   self.error = "Deze tijd is helaas niet beschikbaar op deze baan kies een andere tijd/baan"
                                   self.succesvol = ""
                               } else {
-                                reserveringref.push({
-                                    Lidnummer: lidnummer,
-                                    Baan: court,
-                                    Medespeler1: medespeler1,
-                                    Medespeler2: medespeler2,
-                                    Medespeler3: medespeler3,
-                                    Datum: datum,
-                                    Tijd: tijd,
-                                })
-                              }
-                          } else {
-                            reserveringref.push({
-                                Lidnummer: lidnummer,
-                                Baan: court,
-                                Medespeler1: medespeler1,
-                                Medespeler2: medespeler2,
-                                Medespeler3: medespeler3,
-                                Datum: datum,
-                                Tijd: tijd,
-                            })
-                          }
-                      } else{
-                          console.log('test')
+                                self.error = ""
+                                self.succesvol = "Reservering succesvol aangemaakt, u tennist op " + datum + " om " + tijd + " samen met " + medespeler1 + ", " + medespeler2 + " en " + medespeler3
+                                if(medespeler2 == "") {
+                                    medespeler2 = "-"
+                                }
+                                if(medespeler3 == "") {
+                                    medespeler3 = "-"
+                                }
                           reserveringref.push({
                                 Lidnummer: lidnummer,
                                 Baan: court,
@@ -275,6 +293,47 @@ export default {
                                 Medespeler3: medespeler3,
                                 Datum: datum,
                                 Tijd: tijd,
+                                Email: email
+                          })
+                              }
+                          } else {
+                              self.error = ""
+                              self.succesvol = "Reservering succesvol aangemaakt, u tennist op " + datum + " om " + tijd + " samen met " + medespeler1 + ", " + medespeler2 + " en " + medespeler3
+                              if(medespeler2 == "") {
+                                    medespeler2 = "-"
+                                }
+                                if(medespeler3 == "") {
+                                    medespeler3 = "-"
+                                }
+                          reserveringref.push({
+                                Lidnummer: lidnummer,
+                                Baan: court,
+                                Medespeler1: medespeler1,
+                                Medespeler2: medespeler2,
+                                Medespeler3: medespeler3,
+                                Datum: datum,
+                                Tijd: tijd,
+                                Email: email
+                          })
+                          }
+                      } else{
+                          self.error = ""
+                          self.succesvol = "Reservering succesvol aangemaakt, u tennist op " + datum + " om " + tijd + " samen met " + medespeler1 + ", " + medespeler2 + " en " + medespeler3
+                          if(medespeler2 == "") {
+                                    medespeler2 = "-"
+                                }
+                                if(medespeler3 == "") {
+                                    medespeler3 = "-"
+                                }
+                          reserveringref.push({
+                                Lidnummer: lidnummer,
+                                Baan: court,
+                                Medespeler1: medespeler1,
+                                Medespeler2: medespeler2,
+                                Medespeler3: medespeler3,
+                                Datum: datum,
+                                Tijd: tijd,
+                                Email: email
                           })
                       }
                     } else {
@@ -282,40 +341,23 @@ export default {
                     }
                 }
                 else if(medespeler1 == datamedespeler2) {
-                    if(datamedespeler1 == "") {
+                    if(datamedespeler1 == "" || datamedespeler1 == "-") {
                         if(court == databaan) {
                           self.succesvol = 'baan beschikbaar'
-                          console.log(court)
                           if(datum == datadatum) {
                               self.succesvol = "datum beschikbaar"
-                              console.log(datum)
                               if(tijd == datatijd) {
                                   self.error = "Deze tijd is helaas niet beschikbaar op deze baan kies een andere tijd/baan"
                                   self.succesvol = ""
                               } else {
-                                reserveringref.push({
-                                    Lidnummer: lidnummer,
-                                    Baan: court,
-                                    Medespeler1: medespeler1,
-                                    Medespeler2: medespeler2,
-                                    Medespeler3: medespeler3,
-                                    Datum: datum,
-                                    Tijd: tijd,
-                                })
-                              }
-                          } else {
-                            reserveringref.push({
-                                Lidnummer: lidnummer,
-                                Baan: court,
-                                Medespeler1: medespeler1,
-                                Medespeler2: medespeler2,
-                                Medespeler3: medespeler3,
-                                Datum: datum,
-                                Tijd: tijd,
-                            })
-                          }
-                      } else{
-                          console.log('test2')
+                                self.error = ""
+                                self.succesvol = "Reservering succesvol aangemaakt, u tennist op " + datum + " om " + tijd + " samen met " + medespeler1 + ", " + medespeler2 + " en " + medespeler3
+                                if(medespeler2 == "") {
+                                    medespeler2 = "-"
+                                }
+                                if(medespeler3 == "") {
+                                    medespeler3 = "-"
+                                }
                           reserveringref.push({
                                 Lidnummer: lidnummer,
                                 Baan: court,
@@ -324,6 +366,47 @@ export default {
                                 Medespeler3: medespeler3,
                                 Datum: datum,
                                 Tijd: tijd,
+                                Email: email
+                          })
+                              }
+                          } else {
+                              self.error = ""
+                              self.succesvol = "Reservering succesvol aangemaakt, u tennist op " + datum + " om " + tijd + " samen met " + medespeler1 + ", " + medespeler2 + " en " + medespeler3
+                            if(medespeler2 == "") {
+                                    medespeler2 = "-"
+                                }
+                                if(medespeler3 == "") {
+                                    medespeler3 = "-"
+                                }
+                          reserveringref.push({
+                                Lidnummer: lidnummer,
+                                Baan: court,
+                                Medespeler1: medespeler1,
+                                Medespeler2: medespeler2,
+                                Medespeler3: medespeler3,
+                                Datum: datum,
+                                Tijd: tijd,
+                                Email: email
+                          })
+                          }
+                      } else{
+                          self.error = ""
+                          self.succesvol = "Reservering succesvol aangemaakt, u tennist op " + datum + " om " + tijd + " samen met " + medespeler1 + ", " + medespeler2 + " en " + medespeler3
+                          if(medespeler2 == "") {
+                                    medespeler2 = "-"
+                                }
+                                if(medespeler3 == "") {
+                                    medespeler3 = "-"
+                                }
+                          reserveringref.push({
+                                Lidnummer: lidnummer,
+                                Baan: court,
+                                Medespeler1: medespeler1,
+                                Medespeler2: medespeler2,
+                                Medespeler3: medespeler3,
+                                Datum: datum,
+                                Tijd: tijd,
+                                Email: email
                           })
                       }
                     } else {
@@ -331,40 +414,23 @@ export default {
                     }
                 }
                 else if(medespeler1 == datamedespeler3) {
-                    if(datamedespeler1 == "") {
+                    if(datamedespeler1 == "" || datamedespeler1 == "-") {
                         if(court == databaan) {
                           self.succesvol = 'baan beschikbaar'
-                          console.log(court)
                           if(datum == datadatum) {
                               self.succesvol = "datum beschikbaar"
-                              console.log(datum)
                               if(tijd == datatijd) {
                                   self.error = "Deze tijd is helaas niet beschikbaar op deze baan kies een andere tijd/baan"
                                   self.succesvol = ""
                               } else {
-                                reserveringref.push({
-                                    Lidnummer: lidnummer,
-                                    Baan: court,
-                                    Medespeler1: medespeler1,
-                                    Medespeler2: medespeler2,
-                                    Medespeler3: medespeler3,
-                                    Datum: datum,
-                                    Tijd: tijd,
-                                })
-                              }
-                          } else {
-                            reserveringref.push({
-                                Lidnummer: lidnummer,
-                                Baan: court,
-                                Medespeler1: medespeler1,
-                                Medespeler2: medespeler2,
-                                Medespeler3: medespeler3,
-                                Datum: datum,
-                                Tijd: tijd,
-                            })
-                          }
-                      } else{
-                          console.log('test3')
+                                self.error = ""
+                                self.succesvol = "Reservering succesvol aangemaakt, u tennist op " + datum + " om " + tijd + " samen met " + medespeler1 + ", " + medespeler2 + " en " + medespeler3
+                                if(medespeler2 == "") {
+                                    medespeler2 = "-"
+                                }
+                                if(medespeler3 == "") {
+                                    medespeler3 = "-"
+                                }
                           reserveringref.push({
                                 Lidnummer: lidnummer,
                                 Baan: court,
@@ -373,6 +439,47 @@ export default {
                                 Medespeler3: medespeler3,
                                 Datum: datum,
                                 Tijd: tijd,
+                                Email: email
+                          })
+                              }
+                          } else {
+                            self.error = ""
+                            self.succesvol = "Reservering succesvol aangemaakt, u tennist op " + datum + " om " + tijd + " samen met " + medespeler1 + ", " + medespeler2 + " en " + medespeler3
+                            if(medespeler2 == "") {
+                                    medespeler2 = "-"
+                                }
+                                if(medespeler3 == "") {
+                                    medespeler3 = "-"
+                                }
+                          reserveringref.push({
+                                Lidnummer: lidnummer,
+                                Baan: court,
+                                Medespeler1: medespeler1,
+                                Medespeler2: medespeler2,
+                                Medespeler3: medespeler3,
+                                Datum: datum,
+                                Tijd: tijd,
+                                Email: email
+                          })
+                          }
+                      } else{
+                          self.error = ""
+                          self.succesvol = "Reservering succesvol aangemaakt, u tennist op " + datum + " om " + tijd + " samen met " + medespeler1 + ", " + medespeler2 + " en " + medespeler3
+                          if(medespeler2 == "") {
+                                    medespeler2 = "-"
+                                }
+                                if(medespeler3 == "") {
+                                    medespeler3 = "-"
+                                }
+                          reserveringref.push({
+                                Lidnummer: lidnummer,
+                                Baan: court,
+                                Medespeler1: medespeler1,
+                                Medespeler2: medespeler2,
+                                Medespeler3: medespeler3,
+                                Datum: datum,
+                                Tijd: tijd,
+                                Email: email
                           })
                       }
                     } else {
@@ -380,40 +487,23 @@ export default {
                     }
                 }
                 else if(medespeler2 == datamedespeler1) {
-                    if(datamedespeler2 == "") {
+                    if(datamedespeler2 == "" || datamedespeler2 == "-") {
                         if(court == databaan) {
                           self.succesvol = 'baan beschikbaar'
-                          console.log(court)
                           if(datum == datadatum) {
                               self.succesvol = "datum beschikbaar"
-                              console.log(datum)
                               if(tijd == datatijd) {
                                   self.error = "Deze tijd is helaas niet beschikbaar op deze baan kies een andere tijd/baan"
                                   self.succesvol = ""
                               } else {
-                                reserveringref.push({
-                                    Lidnummer: lidnummer,
-                                    Baan: court,
-                                    Medespeler1: medespeler1,
-                                    Medespeler2: medespeler2,
-                                    Medespeler3: medespeler3,
-                                    Datum: datum,
-                                    Tijd: tijd,
-                                })
-                              }
-                          } else {
-                            reserveringref.push({
-                                Lidnummer: lidnummer,
-                                Baan: court,
-                                Medespeler1: medespeler1,
-                                Medespeler2: medespeler2,
-                                Medespeler3: medespeler3,
-                                Datum: datum,
-                                Tijd: tijd,
-                            })
-                          }
-                      } else{
-                          console.log('test4')
+                                self.error = ""
+                                self.succesvol = "Reservering succesvol aangemaakt, u tennist op " + datum + " om " + tijd + " samen met " + medespeler1 + ", " + medespeler2 + " en " + medespeler3
+                                if(medespeler2 == "") {
+                                    medespeler2 = "-"
+                                }
+                                if(medespeler3 == "") {
+                                    medespeler3 = "-"
+                                }
                           reserveringref.push({
                                 Lidnummer: lidnummer,
                                 Baan: court,
@@ -422,6 +512,47 @@ export default {
                                 Medespeler3: medespeler3,
                                 Datum: datum,
                                 Tijd: tijd,
+                                Email: email
+                          })
+                              }
+                          } else {
+                            self.error = ""
+                            self.succesvol = "Reservering succesvol aangemaakt, u tennist op " + datum + " om " + tijd + " samen met " + medespeler1 + ", " + medespeler2 + " en " + medespeler3
+                            if(medespeler2 == "") {
+                                    medespeler2 = "-"
+                                }
+                                if(medespeler3 == "") {
+                                    medespeler3 = "-"
+                                }
+                          reserveringref.push({
+                                Lidnummer: lidnummer,
+                                Baan: court,
+                                Medespeler1: medespeler1,
+                                Medespeler2: medespeler2,
+                                Medespeler3: medespeler3,
+                                Datum: datum,
+                                Tijd: tijd,
+                                Email: email
+                          })
+                          }
+                      } else{
+                          self.error = ""
+                          self.succesvol = "Reservering succesvol aangemaakt, u tennist op " + datum + " om " + tijd + " samen met " + medespeler1 + ", " + medespeler2 + " en " + medespeler3
+                          if(medespeler2 == "") {
+                                    medespeler2 = "-"
+                                }
+                                if(medespeler3 == "") {
+                                    medespeler3 = "-"
+                                }
+                          reserveringref.push({
+                                Lidnummer: lidnummer,
+                                Baan: court,
+                                Medespeler1: medespeler1,
+                                Medespeler2: medespeler2,
+                                Medespeler3: medespeler3,
+                                Datum: datum,
+                                Tijd: tijd,
+                                Email: email
                           })
                       }
                     } else {
@@ -432,17 +563,23 @@ export default {
                         if(datamedespeler2 == "" && medespeler3 != "") {
                             self.error = "Kies eerst een 2e medespeler voordat u een 3e medespeler kiest"
                         } else {
-                            if(datamedespeler2 == "") {
+                            if(datamedespeler2 == "" || datamedespeler2 == "-") {
                                 if(court == databaan) {
                                     self.succesvol = 'baan beschikbaar'
-                                    console.log(court)
                                     if(datum == datadatum) {
                                         self.succesvol = "datum beschikbaar"
-                                        console.log(datum)
                                         if(tijd == datatijd) {
                                             self.error = "Deze tijd is helaas niet beschikbaar op deze baan kies een andere tijd/baan"
                                             self.succesvol = ""
                                         } else {
+                                            self.error = ""
+                                            self.succesvol = "Reservering succesvol aangemaakt, u tennist op " + datum + " om " + tijd + " samen met " + medespeler1 + ", " + medespeler2 + " en " + medespeler3
+                                            if(medespeler2 == "") {
+                                                medespeler2 = "-"
+                                            }
+                                            if(medespeler3 == "") {
+                                                medespeler3 = "-"
+                                            }
                                             reserveringref.push({
                                                 Lidnummer: lidnummer,
                                                 Baan: court,
@@ -451,9 +588,18 @@ export default {
                                                 Medespeler3: medespeler3,
                                                 Datum: datum,
                                                 Tijd: tijd,
+                                                Email: email
                                             })
                                         }
                                     } else {
+                                        self.error = ""
+                                        self.succesvol = "Reservering succesvol aangemaakt, u tennist op " + datum + " om " + tijd + " samen met " + medespeler1 + ", " + medespeler2 + " en " + medespeler3
+                                        if(medespeler2 == "") {
+                                            medespeler2 = "-"
+                                        }
+                                        if(medespeler3 == "") {
+                                            medespeler3 = "-"
+                                        }
                                         reserveringref.push({
                                             Lidnummer: lidnummer,
                                             Baan: court,
@@ -462,20 +608,28 @@ export default {
                                             Medespeler3: medespeler3,
                                             Datum: datum,
                                             Tijd: tijd,
+                                            Email: email
                                         })
                                     }
                                 } else{
-                                    console.log('test5')
-                                    console.log(datamedespeler3)
-                                    reserveringref.push({
-                                            Lidnummer: lidnummer,
-                                            Baan: court,
-                                            Medespeler1: medespeler1,
-                                            Medespeler2: medespeler2,
-                                            Medespeler3: medespeler3,
-                                            Datum: datum,
-                                            Tijd: tijd,
-                                    })
+                                    self.error = ""
+                                    self.succesvol = "Reservering succesvol aangemaakt, u tennist op " + datum + " om " + tijd + " samen met " + medespeler1 + ", " + medespeler2 + " en " + medespeler3
+                                    if(medespeler2 == "") {
+                                    medespeler2 = "-"
+                                }
+                                if(medespeler3 == "") {
+                                    medespeler3 = "-"
+                                }
+                          reserveringref.push({
+                                Lidnummer: lidnummer,
+                                Baan: court,
+                                Medespeler1: medespeler1,
+                                Medespeler2: medespeler2,
+                                Medespeler3: medespeler3,
+                                Datum: datum,
+                                Tijd: tijd,
+                                Email: email
+                          })
                                 }
                             } else {
                                 self.error = medespeler2 + " heeft al een reservering in ons systeem staan" 
@@ -483,40 +637,23 @@ export default {
                         }
                     }
                 else if(medespeler2 == datamedespeler3) {
-                    if(datamedespeler2 == "") {
+                    if(datamedespeler2 == "" || datamedespeler2 == "-") {
                         if(court == databaan) {
                           self.succesvol = 'baan beschikbaar'
-                          console.log(court)
                           if(datum == datadatum) {
                               self.succesvol = "datum beschikbaar"
-                              console.log(datum)
                               if(tijd == datatijd) {
                                   self.error = "Deze tijd is helaas niet beschikbaar op deze baan kies een andere tijd/baan"
                                   self.succesvol = ""
                               } else {
-                                reserveringref.push({
-                                    Lidnummer: lidnummer,
-                                    Baan: court,
-                                    Medespeler1: medespeler1,
-                                    Medespeler2: medespeler2,
-                                    Medespeler3: medespeler3,
-                                    Datum: datum,
-                                    Tijd: tijd,
-                                })
-                              }
-                          } else {
-                            reserveringref.push({
-                                Lidnummer: lidnummer,
-                                Baan: court,
-                                Medespeler1: medespeler1,
-                                Medespeler2: medespeler2,
-                                Medespeler3: medespeler3,
-                                Datum: datum,
-                                Tijd: tijd,
-                            })
-                          }
-                      } else{
-                          console.log('test6')
+                                self.error = ""
+                                self.succesvol = "Reservering succesvol aangemaakt, u tennist op " + datum + " om " + tijd + " samen met " + medespeler1 + ", " + medespeler2 + " en " + medespeler3
+                                if(medespeler2 == "") {
+                                    medespeler2 = "-"
+                                }
+                                if(medespeler3 == "") {
+                                    medespeler3 = "-"
+                                }
                           reserveringref.push({
                                 Lidnummer: lidnummer,
                                 Baan: court,
@@ -525,6 +662,47 @@ export default {
                                 Medespeler3: medespeler3,
                                 Datum: datum,
                                 Tijd: tijd,
+                                Email: email
+                          })
+                              }
+                          } else {
+                            self.error = ""
+                            self.succesvol = "Reservering succesvol aangemaakt, u tennist op " + datum + " om " + tijd + " samen met " + medespeler1 + ", " + medespeler2 + " en " + medespeler3
+                            if(medespeler2 == "") {
+                                    medespeler2 = "-"
+                                }
+                                if(medespeler3 == "") {
+                                    medespeler3 = "-"
+                                }
+                          reserveringref.push({
+                                Lidnummer: lidnummer,
+                                Baan: court,
+                                Medespeler1: medespeler1,
+                                Medespeler2: medespeler2,
+                                Medespeler3: medespeler3,
+                                Datum: datum,
+                                Tijd: tijd,
+                                Email: email
+                          })
+                          }
+                      } else{
+                          self.error = ""
+                          self.succesvol = "Reservering succesvol aangemaakt, u tennist op " + datum + " om " + tijd + " samen met " + medespeler1 + ", " + medespeler2 + " en " + medespeler3
+                          if(medespeler2 == "") {
+                                    medespeler2 = "-"
+                                }
+                                if(medespeler3 == "") {
+                                    medespeler3 = "-"
+                                }
+                          reserveringref.push({
+                                Lidnummer: lidnummer,
+                                Baan: court,
+                                Medespeler1: medespeler1,
+                                Medespeler2: medespeler2,
+                                Medespeler3: medespeler3,
+                                Datum: datum,
+                                Tijd: tijd,
+                                Email: email
                           })
                       }
                     } else {
@@ -532,40 +710,23 @@ export default {
                     }
                 }
                 else if(medespeler3 == datamedespeler1) {
-                    if(datamedespeler3 == "") {
+                    if(datamedespeler3 == "" || datamedespeler3 == "-") {
                         if(court == databaan) {
                           self.succesvol = 'baan beschikbaar'
-                          console.log(court)
                           if(datum == datadatum) {
                               self.succesvol = "datum beschikbaar"
-                              console.log(datum)
                               if(tijd == datatijd) {
                                   self.error = "Deze tijd is helaas niet beschikbaar op deze baan kies een andere tijd/baan"
                                   self.succesvol = ""
                               } else {
-                                reserveringref.push({
-                                    Lidnummer: lidnummer,
-                                    Baan: court,
-                                    Medespeler1: medespeler1,
-                                    Medespeler2: medespeler2,
-                                    Medespeler3: medespeler3,
-                                    Datum: datum,
-                                    Tijd: tijd,
-                                })
-                              }
-                          } else {
-                            reserveringref.push({
-                                Lidnummer: lidnummer,
-                                Baan: court,
-                                Medespeler1: medespeler1,
-                                Medespeler2: medespeler2,
-                                Medespeler3: medespeler3,
-                                Datum: datum,
-                                Tijd: tijd,
-                            })
-                          }
-                      } else{
-                          console.log('test7')
+                                self.error = ""
+                                self.succesvol = "Reservering succesvol aangemaakt, u tennist op " + datum + " om " + tijd + " samen met " + medespeler1 + ", " + medespeler2 + " en " + medespeler3
+                                if(medespeler2 == "") {
+                                    medespeler2 = "-"
+                                }
+                                if(medespeler3 == "") {
+                                    medespeler3 = "-"
+                                }
                           reserveringref.push({
                                 Lidnummer: lidnummer,
                                 Baan: court,
@@ -574,6 +735,47 @@ export default {
                                 Medespeler3: medespeler3,
                                 Datum: datum,
                                 Tijd: tijd,
+                                Email: email
+                          })
+                              }
+                          } else {
+                              self.error = ""
+                                self.succesvol = "Reservering succesvol aangemaakt, u tennist op " + datum + " om " + tijd + " samen met " + medespeler1 + ", " + medespeler2 + " en " + medespeler3
+                            if(medespeler2 == "") {
+                                    medespeler2 = "-"
+                                }
+                                if(medespeler3 == "") {
+                                    medespeler3 = "-"
+                                }
+                          reserveringref.push({
+                                Lidnummer: lidnummer,
+                                Baan: court,
+                                Medespeler1: medespeler1,
+                                Medespeler2: medespeler2,
+                                Medespeler3: medespeler3,
+                                Datum: datum,
+                                Tijd: tijd,
+                                Email: email
+                          })
+                          }
+                      } else{
+                          self.error = ""
+                                self.succesvol = "Reservering succesvol aangemaakt, u tennist op " + datum + " om " + tijd + " samen met " + medespeler1 + ", " + medespeler2 + " en " + medespeler3
+                          if(medespeler2 == "") {
+                                    medespeler2 = "-"
+                                }
+                                if(medespeler3 == "") {
+                                    medespeler3 = "-"
+                                }
+                          reserveringref.push({
+                                Lidnummer: lidnummer,
+                                Baan: court,
+                                Medespeler1: medespeler1,
+                                Medespeler2: medespeler2,
+                                Medespeler3: medespeler3,
+                                Datum: datum,
+                                Tijd: tijd,
+                                Email: email
                           })
                       }
                     } else {
@@ -581,40 +783,23 @@ export default {
                     }
                 }
                 else if(medespeler3 == datamedespeler2) {
-                    if(datamedespeler3 == "") {
+                    if(datamedespeler3 == "" || datamedespeler3 == "-") {
                         if(court == databaan) {
                           self.succesvol = 'baan beschikbaar'
-                          console.log(court)
                           if(datum == datadatum) {
                               self.succesvol = "datum beschikbaar"
-                              console.log(datum)
                               if(tijd == datatijd) {
                                   self.error = "Deze tijd is helaas niet beschikbaar op deze baan kies een andere tijd/baan"
                                   self.succesvol = ""
                               } else {
-                                reserveringref.push({
-                                    Lidnummer: lidnummer,
-                                    Baan: court,
-                                    Medespeler1: medespeler1,
-                                    Medespeler2: medespeler2,
-                                    Medespeler3: medespeler3,
-                                    Datum: datum,
-                                    Tijd: tijd,
-                                })
-                              }
-                          } else {
-                            reserveringref.push({
-                                Lidnummer: lidnummer,
-                                Baan: court,
-                                Medespeler1: medespeler1,
-                                Medespeler2: medespeler2,
-                                Medespeler3: medespeler3,
-                                Datum: datum,
-                                Tijd: tijd,
-                            })
-                          }
-                      } else{
-                          console.log('test8')
+                                  self.error = ""
+                                self.succesvol = "Reservering succesvol aangemaakt, u tennist op " + datum + " om " + tijd + " samen met " + medespeler1 + ", " + medespeler2 + " en " + medespeler3
+                                if(medespeler2 == "") {
+                                    medespeler2 = "-"
+                                }
+                                if(medespeler3 == "") {
+                                    medespeler3 = "-"
+                                }
                           reserveringref.push({
                                 Lidnummer: lidnummer,
                                 Baan: court,
@@ -623,6 +808,47 @@ export default {
                                 Medespeler3: medespeler3,
                                 Datum: datum,
                                 Tijd: tijd,
+                                Email: email
+                          })
+                              }
+                          } else {
+                              self.error = ""
+                                self.succesvol = "Reservering succesvol aangemaakt, u tennist op " + datum + " om " + tijd + " samen met " + medespeler1 + ", " + medespeler2 + " en " + medespeler3
+                            if(medespeler2 == "") {
+                                    medespeler2 = "-"
+                                }
+                                if(medespeler3 == "") {
+                                    medespeler3 = "-"
+                                }
+                            reserveringref.push({
+                                Lidnummer: lidnummer,
+                                Baan: court,
+                                Medespeler1: medespeler1,
+                                Medespeler2: medespeler2,
+                                Medespeler3: medespeler3,
+                                Datum: datum,
+                                Tijd: tijd,
+                                Email: email
+                            })
+                          }
+                      } else{
+                         self.error = ""
+                                self.succesvol = "Reservering succesvol aangemaakt, u tennist op " + datum + " om " + tijd + " samen met " + medespeler1 + ", " + medespeler2 + " en " + medespeler3
+                          if(medespeler2 == "") {
+                                    medespeler2 = "-"
+                                }
+                                if(medespeler3 == "") {
+                                    medespeler3 = "-"
+                                }
+                          reserveringref.push({
+                                Lidnummer: lidnummer,
+                                Baan: court,
+                                Medespeler1: medespeler1,
+                                Medespeler2: medespeler2,
+                                Medespeler3: medespeler3,
+                                Datum: datum,
+                                Tijd: tijd,
+                                Email: email
                           })
                       }
                     } else {
@@ -630,40 +856,23 @@ export default {
                     }
                 }
                 else if(medespeler3 == datamedespeler3) {
-                    if(datamedespeler3 == "") {
+                    if(datamedespeler3 == "" || datamedespeler3 == "-") {
                         if(court == databaan) {
                           self.succesvol = 'baan beschikbaar'
-                          console.log(court)
                           if(datum == datadatum) {
                               self.succesvol = "datum beschikbaar"
-                              console.log(datum)
                               if(tijd == datatijd) {
                                   self.error = "Deze tijd is helaas niet beschikbaar op deze baan kies een andere tijd/baan"
                                   self.succesvol = ""
                               } else {
-                                reserveringref.push({
-                                    Lidnummer: lidnummer,
-                                    Baan: court,
-                                    Medespeler1: medespeler1,
-                                    Medespeler2: medespeler2,
-                                    Medespeler3: medespeler3,
-                                    Datum: datum,
-                                    Tijd: tijd,
-                                })
-                              }
-                          } else {
-                            reserveringref.push({
-                                Lidnummer: lidnummer,
-                                Baan: court,
-                                Medespeler1: medespeler1,
-                                Medespeler2: medespeler2,
-                                Medespeler3: medespeler3,
-                                Datum: datum,
-                                Tijd: tijd,
-                            })
-                          }
-                      } else{
-                          console.log('test9')
+                                  self.error = ""
+                                self.succesvol = "Reservering succesvol aangemaakt, u tennist op " + datum + " om " + tijd + " samen met " + medespeler1 + ", " + medespeler2 + " en " + medespeler3
+                                if(medespeler2 == "") {
+                                    medespeler2 = "-"
+                                }
+                                if(medespeler3 == "") {
+                                    medespeler3 = "-"
+                                }
                           reserveringref.push({
                                 Lidnummer: lidnummer,
                                 Baan: court,
@@ -672,6 +881,47 @@ export default {
                                 Medespeler3: medespeler3,
                                 Datum: datum,
                                 Tijd: tijd,
+                                Email: email
+                          })
+                              }
+                          } else {
+                              self.error = ""
+                                self.succesvol = "Reservering succesvol aangemaakt, u tennist op " + datum + " om " + tijd + " samen met " + medespeler1 + ", " + medespeler2 + " en " + medespeler3
+                            if(medespeler2 == "") {
+                                    medespeler2 = "-"
+                                }
+                                if(medespeler3 == "") {
+                                    medespeler3 = "-"
+                                }
+                          reserveringref.push({
+                                Lidnummer: lidnummer,
+                                Baan: court,
+                                Medespeler1: medespeler1,
+                                Medespeler2: medespeler2,
+                                Medespeler3: medespeler3,
+                                Datum: datum,
+                                Tijd: tijd,
+                                Email: email
+                          })
+                          }
+                      } else{
+                          self.error = ""
+                          self.succesvol = "Reservering succesvol aangemaakt, u tennist op " + datum + " om " + tijd + " samen met " + medespeler1 + ", " + medespeler2 + " en " + medespeler3
+                          if(medespeler2 == "") {
+                                    medespeler2 = "-"
+                                }
+                                if(medespeler3 == "") {
+                                    medespeler3 = "-"
+                                }
+                          reserveringref.push({
+                                Lidnummer: lidnummer,
+                                Baan: court,
+                                Medespeler1: medespeler1,
+                                Medespeler2: medespeler2,
+                                Medespeler3: medespeler3,
+                                Datum: datum,
+                                Tijd: tijd,
+                                Email: email
                           })
                       }
                     } else {
@@ -707,6 +957,7 @@ export default {
                 medespeler
                 allreserveringen
                 mijnreserveringen
+                gebruikerToevoegen
             }
         }`
     }

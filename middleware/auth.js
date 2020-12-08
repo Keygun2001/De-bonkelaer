@@ -6,6 +6,7 @@ export default function ({ app, route, store, redirect }) {
     const gebruikersref = firebase.database().ref('Gebruikers/')
     const blockedRoute = /\/ingelogd\/*/g;
     const blockedRoute2 = /\/gebruikertoevoegen\/*/g;
+    const blockedRoute3 = /\/mijnreservering\/*/g;
     const homeRoute = "/reserveren";
     const curuser = firebase.auth().currentUser
 
@@ -32,5 +33,8 @@ export default function ({ app, route, store, redirect }) {
 
     if (user && route.path === homeRoute) {
         redirect("/ingelogd");
+    }
+    if (!user && route.path.match(blockedRoute3)) {
+        redirect("/reserveren");
     }
 }
