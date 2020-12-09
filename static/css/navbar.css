@@ -161,4 +161,7 @@ a {
 
 .pin-r50 {
     right: 50px;
+    @media only screen and (max-width: 375px) {
+        right:0
+    }
 }

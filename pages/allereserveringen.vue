@@ -1,9 +1,9 @@
 <template>
     <div>
         <div v-for="(data, i) in allAlleReserveringens" :key="i">
-            <div class="bg-blue-100">
-                <div class="container mx-auto py-32">
-                    <div class="w-10/12 mx-auto">
+            <div class="bg-blue-100 md:py-32 py-8">
+                <div class="container mx-auto">
+                    <div class="md:w-10/12 w-full mx-auto">
                         <h1>
                             {{ data.titel }}
                         </h1>

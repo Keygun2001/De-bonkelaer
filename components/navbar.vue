@@ -10,7 +10,7 @@
             <div class="flex items-center lg:w-6/12">
                 <nav class="hidden lg:flex">
                     <ul class="flex menu">
-                        <li>
+                        <li class="menu--list">
                             <NuxtLink to="/" v-for="(home, index) in allHomepaginas" :key="index">
                                 {{ home.contentmatrix[0].titel }}
                             </NuxtLink>
@@ -72,32 +72,32 @@
                   {{ menu.menuTitel }}
                 </h2>
                 <li class="mobile">
-                  <NuxtLink class="mobilelink" to="/" v-for="(home, index) in allHomepaginas" :key="index">
+                  <NuxtLink @click.native="showNav = !showNav" class="mobilelink" to="/" v-for="(home, index) in allHomepaginas" :key="index">
                     {{ home.contentmatrix[0].titel }}
                   </NuxtLink>
                 </li>
                 <li class="mobile">
-                  <NuxtLink class="mobilelink" to='/actueel' v-for="(actueel, index) in allActueels" :key="index">
+                  <NuxtLink  @click.native="showNav = !showNav" class="mobilelink" to='/actueel' v-for="(actueel, index) in allActueels" :key="index">
                     {{ actueel.contentmatrix[0].titel }}
                   </NuxtLink>
                 </li>
                 <li class="mobile">
-                  <NuxtLink class="mobilelink" to='/tarieven' v-for="(tarieven, index) in allTarievens" :key="index">
+                  <NuxtLink  @click.native="showNav = !showNav" class="mobilelink" to='/tarieven' v-for="(tarieven, index) in allTarievens" :key="index">
                     {{ tarieven.titel }}
                   </NuxtLink>
                 </li>
                 <li class="mobile">
-                  <NuxtLink class="mobilelink" to='/reserveren' v-for="(reserveren, index) in allReserverens" :key="index">
+                  <NuxtLink  @click.native="showNav = !showNav" class="mobilelink" to='/reserveren' v-for="(reserveren, index) in allReserverens" :key="index">
                     {{ reserveren.contentmatrix[0].titel }}
                   </NuxtLink>
                 </li>
                 <li class="mobile">
-                  <NuxtLink class="mobilelink" to='/reglement' v-for="(reglementen, index) in allReglements" :key="index">
+                  <NuxtLink  @click.native="showNav = !showNav" class="mobilelink" to='/reglement' v-for="(reglementen, index) in allReglements" :key="index">
                     {{ reglementen.contentmatrix[0].titel }}
                   </NuxtLink>
                 </li>
                 <li class="mobile">
-                  <NuxtLink class="mobilelink" to='/impressies' v-for="(impressies, index) in allImpressies" :key="index">
+                  <NuxtLink  @click.native="showNav = !showNav" class="mobilelink" to='/impressies' v-for="(impressies, index) in allImpressies" :key="index">
                     {{ impressies.contentmatrix[0].titel }}
                   </NuxtLink>
                 </li>

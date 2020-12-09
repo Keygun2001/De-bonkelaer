@@ -71,7 +71,7 @@
                             {{ data.datumtijdinput }}
                         </p>
                         <input class="rounded inputbox" type="date" id="today" v-model="datum" required />
-                        <select v-model="gekozentijd" class="inputbox rounded" required>
+                        <select v-model="gekozentijd" class="inputbox rounded md:mt-0 mt-4" required>
                             <option v-for="(tijd, y) in tijden" :key="y">{{ tijden[y] }}</option>
                         </select>
                         <input class="downloadbtn my-8" type="submit" :value="data.reserverenKnop" />
@@ -927,6 +927,18 @@ export default {
                     } else {
                         self.error = medespeler3 + " heeft al een reservering in ons systeem staan"
                     }
+                } else {
+                    self.succesvol = "Reservering succesvol aangemaakt, u tennist op " + datum + " om " + tijd + " samen met " + medespeler1 + ", " + medespeler2 + " en " + medespeler3
+                    reserveringref.push({
+                        Lidnummer: lidnummer,
+                        Baan: court,
+                        Medespeler1: medespeler1,
+                        Medespeler2: medespeler2,
+                        Medespeler3: medespeler3,
+                        Datum: datum,
+                        Tijd: tijd,
+                        Email: email
+                    })
                 }
             })
         },
