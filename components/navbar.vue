@@ -55,12 +55,10 @@
           <nav class="mobile-menu absolute pin-r50 lg:hidden block w-1/2">
             <div class="text-right ml-auto h-full">
               <div class="w-full flex justify-end items-center h-full">
-                <div :class="{'open':showNav}" class="toggle justify-end h-full flex items-center">
-                  <div @click="showNav = !showNav" class="lines z-50">
-                    <div class="one"></div>
-                    <div class="two"></div>
-                    <div class="three"></div>
-                  </div>
+                <div :class="{'is-active':showNav}" class="hamburger hamburger--emphatic" type="button">
+                  <span class="hamburger-box">
+                    <span @click="showNav = !showNav" class="hamburger-inner"></span>
+                  </span>
                 </div>
               </div>
             </div>
@@ -238,5 +236,6 @@ export default {
 
 </script>
 
-<style scoped src="~/static/css/navbar.css"> </style>
 <style scoped src="~/static/css/main.css"> </style>
+<style scoped src="~/static/css/navbar.css"> </style>
+<style scoped src="~/static/css/hamburgers.css"> </style>

@@ -205,3 +205,9 @@ p {
       flex-direction: column;
   }
 }
+
+.errorlink {
+  color: #808a94;
+  font-weight: bold;
+
+}

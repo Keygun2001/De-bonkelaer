@@ -75,11 +75,6 @@ a {
     margin: 7px 0;
 }
 
-.hamburgerrechts {
-    position: absolute;
-    right: 0;
-}
-
 .open .lines .one {
     transform: rotate(-45deg) translate(-9px,0px);
 }

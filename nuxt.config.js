@@ -25,6 +25,8 @@ export default {
     '~/plugins/fireauth.js'
   ],
 
+  generate: { fallback: '404.html' },
+
   // Auto import components (https://go.nuxtjs.dev/config-components)
   components: true,
 

@@ -17,31 +17,31 @@
                             <client-only>
                                 <div class="revall">
                                     <tr class="flex flex-col">
-                                        Lidnummer:
+                                        {{ data.tabel[0].lidnummer }}
                                         <td v-for="(item, index) in lidnummers" :key="index" v-html="lidnummers[index]"></td>  
                                     </tr>
                                     <tr class="flex flex-col">
-                                        Baan:
+                                        {{ data.tabel[0].baan }}
                                         <td v-for="(item, index) in banen" :key="index" v-html="banen[index]"></td>  
                                     </tr>
                                     <tr class="flex flex-col">
-                                        Medespeler 1:
+                                        {{ data.tabel[0].medespeler1 }}
                                         <td v-for="(item, index) in medespeler1s" :key="index" v-html="medespeler1s[index]"></td>  
                                     </tr>
                                     <tr class="flex flex-col">
-                                        Medespeler 2:
+                                        {{ data.tabel[0].medespeler2 }}
                                         <td v-for="(item, index) in medespeler2s" :key="index" v-html="medespeler2s[index]"></td>  
                                     </tr>
                                     <tr class="flex flex-col">
-                                        Medespeler 3:
+                                        {{ data.tabel[0].medespeler3 }}
                                         <td v-for="(item, index) in medespeler3s" :key="index" v-html="medespeler3s[index]"></td>  
                                     </tr>
                                     <tr class="flex flex-col">
-                                        Datum:
+                                        {{ data.tabel[0].datum }}
                                         <td v-for="(item, index) in datums" :key="index" v-html="datums[index]"></td>  
                                     </tr>
                                     <tr class="flex flex-col">
-                                        Tijd:
+                                        {{ data.tabel[0].tijd }}
                                         <td v-for="(item, index) in tijden" :key="index" v-html="tijden[index]"></td>  
                                     </tr>
                                 </div>
@@ -53,43 +53,43 @@
                                 <div class="revall">
                                     <tr class="flex">
                                         <div class="w-6/12">
-                                            Lidnummer:
+                                            {{ data.tabel[0].lidnummer }}
                                         </div>
                                         <td class="w-6/12" v-for="(item, index) in lidnummers" :key="index" v-html="lidnummers[index]"></td>  
                                     </tr>
                                     <tr class="flex">
                                         <div class="w-6/12">
-                                            Baan:
+                                            {{ data.tabel[0].baan }}
                                         </div>
                                         <td class="w-6/12" v-for="(item, index) in banen" :key="index" v-html="banen[index]"></td>  
                                     </tr>
                                     <tr class="flex">
                                         <div class="w-6/12">
-                                            Medespeler1:
+                                            {{ data.tabel[0].medespeler1 }}
                                         </div>
                                         <td class="w-6/12" v-for="(item, index) in medespeler1s" :key="index" v-html="medespeler1s[index]"></td>  
                                     </tr>
                                     <tr class="flex">
                                         <div class="w-6/12">
-                                            Medespeler2:
+                                            {{ data.tabel[0].medespeler2 }}
                                         </div>
                                         <td class="w-6/12" v-for="(item, index) in medespeler2s" :key="index" v-html="medespeler2s[index]"></td>  
                                     </tr>
                                     <tr class="flex">
                                         <div class="w-6/12">
-                                            Medespeler3:
+                                            {{ data.tabel[0].medespeler3 }}
                                         </div>
                                         <td class="w-6/12" v-for="(item, index) in medespeler3s" :key="index" v-html="medespeler3s[index]"></td>  
                                     </tr>
                                     <tr class="flex">
                                         <div class="w-6/12">
-                                            Datum:
+                                            {{ data.tabel[0].datum }}
                                         </div>
                                         <td class="w-6/12" v-for="(item, index) in datums" :key="index" v-html="datums[index]"></td>  
                                     </tr>
                                     <tr class="flex">
                                         <div class="w-6/12">
-                                            Tijd:
+                                            {{ data.tabel[0].tijd }}
                                         </div>
                                         <td class="w-6/12" v-for="(item, index) in tijden" :key="index" v-html="tijden[index]"></td>  
                                     </tr>
