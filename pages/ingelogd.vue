@@ -560,7 +560,7 @@ export default {
                     }
                 }
                 else if(medespeler2 == datamedespeler2) {
-                        if(datamedespeler2 == "" && medespeler3 != "") {
+                        if(datamedespeler2 == "" || datamedespeler2 == "-" && medespeler3 != "-") {
                             self.error = "Kies eerst een 2e medespeler voordat u een 3e medespeler kiest"
                         } else {
                             if(datamedespeler2 == "" || datamedespeler2 == "-") {

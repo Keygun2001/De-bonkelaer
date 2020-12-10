@@ -108,27 +108,32 @@
                                 </select>
                             </td>
                             <td>
-                                {{ datum }}
+                                <input class="rounded inputbox" type="date" id="today" v-model="datum" required />
                             </td>
                             <td>
-                                {{ tijd }}
+                                <select v-model="tijd" class="inputbox rounded md:mt-0 mt-4" required>
+                                    <option v-for="(tijd, y) in tijden" :key="y">{{ tijden[y] }}</option>
+                                </select>
                             </td>
                         </tr>
                     </table>
-                    <div class="lg:inline flex lg:justify-center py-4" v-if="aanpassen == false">
+                </div>
+                <div class="lg:py-0 py-8 lg:block flex justify-center w-10/12 mx-auto" v-if="aanpassen == false">
                         <button @click="aanpassen = !aanpassen" class="downloadbtn">{{ reservering.aanpassenKnop }}</button>
                     </div>
-                    <div class="lg:inline flex lg:mt-0 mt-4 lg:py-0 py-8" v-else>
-                        <button @click="reserveren" class="downloadbtn">{{ reservering.doorvoerenKnop }}</button>
-                        <div class="lg:mt-8 mt-4">
-                            <div @click="verwijderen" class="kruis">
-                                <div class="een"></div>
-                                <div class="twee"></div>
-                            </div>
+                <div class="lg:py-0 py-8 lg:block flex justify-center items-center w-10/12 mx-auto" v-else>
+                    <button @click="reserveren" class="downloadbtn lg:mt-4 mt-0">{{ reservering.doorvoerenKnop }}</button>
+                    <button @click="verwijderen" class="flex items-center verwijder lg:py-4 py-0 lg:ml-0 ml-4">
+                        <div class="kruis">
+                            <div class="een"></div>
+                            <div class="twee"></div>
                         </div>
-                    </div>
+                        <p class="rodetekst">
+                            {{ reservering.verwijderen }}
+                        </p>
+                    </button>
                 </div>
-                <div v-if="error || succesvol" class="flex w-10/12 mx-auto">
+                <div v-if="error || succesvol" class="lg:block flex justify-center w-10/12 mx-auto">
                     <p class="rodetekst">
                         {{ error }}
                     </p>
@@ -163,7 +168,7 @@ export default {
             datum: '',
             tijd: '',
             error: '',
-            succesvol: ''
+            succesvol: '',
         }
     },
 
@@ -215,7 +220,6 @@ export default {
             if(self.lidnummer) {
                 return
             } else {
-                console.log(self.lidnummer)
                 self.error = "U heeft geen reservering in ons systeem staan"
             }
         });
@@ -224,13 +228,15 @@ export default {
     methods: {
 
         verwijderen: function() {
-            const ref = firebase.database().ref('Reserveringen/')
-            const abcd = ref.orderByChild('Lidnummer').equalTo(this.lidnummer);
-            abcd.once('value', function(abcdSnap){
-                var a = abcdSnap.val();
-                var b = Object.keys(a)[0];
-                ref.child(b).remove();
-            })
+                const ref = firebase.database().ref('Reserveringen/')
+                const abcd = ref.orderByChild('Lidnummer').equalTo(this.lidnummer);
+                abcd.once('value', function(abcdSnap){
+                    var a = abcdSnap.val();
+                    var b = Object.keys(a)[0];
+                    ref.child(b).remove();
+                    self.succesvol = "Reservering succesvol verwijderd! U kunt overnieuw reserveren op de inlogpagina. Herlaad deze pagina en de reservering is weg.";
+                    self.aanpassen = false
+                })
         },
 
         reserveren: function() {
@@ -250,9 +256,10 @@ export default {
                 let databaan = ''
                 let datadatum = ''
                 let datatijd = ''
-                let datamedespeler1 = 'speler1'
-                let datamedespeler2 = 'speler2'
-                let datamedespeler3 = 'speler3'
+                let datamedespeler1 = '-'
+                let datamedespeler2 = '-'
+                let datamedespeler3 = '-'
+                let dataemail = ''
 
                 let datagelijkbaan = ''
                 let datagelijkdatum = ''
@@ -349,670 +356,717 @@ export default {
                         }
                     }
                     if(self.email == data.Email) {
+                        self.dataemail = data.Email
+                    }
+                    if(self.email == data.Email) {
                         if(medespeler1 == datamedespeler1) {
-                    if(datamedespeler1 == "" || datamedespeler1 == "-") {
-                        if(baan == databaan) {
-                          self.succesvol = 'baan beschikbaar'
-                          console.log(baan)
-                          if(datum == datadatum) {
-                              self.succesvol = "datum beschikbaar"
-                              console.log(datum)
-                              if(tijd == datatijd) {
-                                  self.error = "Deze tijd is helaas niet beschikbaar op deze baan kies een andere tijd/baan"
-                                  self.succesvol = ""
-                              } else {
-                                self.aanpassen = false
-                                const abcd = reserveringsref.orderByChild('Lidnummer').equalTo(self.lidnummer);
-                                abcd.once('value', function(abcdSnap){
-                                    var a = abcdSnap.val();
-                                    var b = Object.keys(a)[0];
-                                    reserveringsref.child(b).remove();
-                                })
-                                reserveringsref.push({
-                                    Lidnummer: lidnummer,
-                                    Baan: baan,
-                                    Medespeler1: medespeler1,
-                                    Medespeler2: medespeler2,
-                                    Medespeler3: medespeler3,
-                                    Datum: datum,
-                                    Tijd: tijd,
-                                    Email: email
-                                })
-                              }
-                          } else {
-                            self.aanpassen = false
-                            const abcd = reserveringsref.orderByChild('Lidnummer').equalTo(self.lidnummer);
-                                abcd.once('value', function(abcdSnap){
-                                    var a = abcdSnap.val();
-                                    var b = Object.keys(a)[0];
-                                    reserveringsref.child(b).remove();
-                                })
-                                reserveringsref.push({
-                                    Lidnummer: lidnummer,
-                                    Baan: baan,
-                                    Medespeler1: medespeler1,
-                                    Medespeler2: medespeler2,
-                                    Medespeler3: medespeler3,
-                                    Datum: datum,
-                                    Tijd: tijd,
-                                    Email: email
-                                })
-                          }
-                      } else{
-                          self.aanpassen = false
-                          const abcd = reserveringsref.orderByChild('Lidnummer').equalTo(self.lidnummer);
-                                abcd.once('value', function(abcdSnap){
-                                    var a = abcdSnap.val();
-                                    var b = Object.keys(a)[0];
-                                    reserveringsref.child(b).remove();
-                                })
-                                reserveringsref.push({
-                                    Lidnummer: lidnummer,
-                                    Baan: baan,
-                                    Medespeler1: medespeler1,
-                                    Medespeler2: medespeler2,
-                                    Medespeler3: medespeler3,
-                                    Datum: datum,
-                                    Tijd: tijd,
-                                    Email: email
-                                })
-                      }
-                    } else {
-                        self.error = medespeler1 + " heeft al een reservering in ons systeem staan"
-                    }
-                }
-                else if(medespeler1 == datamedespeler2) {
-                    if(datamedespeler1 == "" || datamedespeler1 == "-") {
-                        if(baan == databaan) {
-                          self.succesvol = 'baan beschikbaar'
-                          console.log(baan)
-                          if(datum == datadatum) {
-                              self.succesvol = "datum beschikbaar"
-                              console.log(datum)
-                              if(tijd == datatijd) {
-                                  self.error = "Deze tijd is helaas niet beschikbaar op deze baan kies een andere tijd/baan"
-                                  self.succesvol = ""
-                              } else {
-                                self.aanpassen = false
-                                
-                                const abcd = reserveringsref.orderByChild('Lidnummer').equalTo(self.lidnummer);
-                                abcd.once('value', function(abcdSnap){
-                                    var a = abcdSnap.val();
-                                    var b = Object.keys(a)[0];
-                                    reserveringsref.child(b).remove();
-                                })
-                                reserveringsref.push({
-                                    Lidnummer: lidnummer,
-                                    Baan: baan,
-                                    Medespeler1: medespeler1,
-                                    Medespeler2: medespeler2,
-                                    Medespeler3: medespeler3,
-                                    Datum: datum,
-                                    Tijd: tijd,
-                                    Email: email
-                                })
-                              }
-                          } else {
-                            self.aanpassen = false
-                            
-                            const abcd = reserveringsref.orderByChild('Lidnummer').equalTo(self.lidnummer);
-                                abcd.once('value', function(abcdSnap){
-                                    var a = abcdSnap.val();
-                                    var b = Object.keys(a)[0];
-                                    reserveringsref.child(b).remove();
-                                })
-                                reserveringsref.push({
-                                    Lidnummer: lidnummer,
-                                    Baan: baan,
-                                    Medespeler1: medespeler1,
-                                    Medespeler2: medespeler2,
-                                    Medespeler3: medespeler3,
-                                    Datum: datum,
-                                    Tijd: tijd,
-                                    Email: email
-                                })
-                          }
-                      } else{
-                        self.aanpassen = false
-                        
-                        const abcd = reserveringsref.orderByChild('Lidnummer').equalTo(self.lidnummer);
-                                abcd.once('value', function(abcdSnap){
-                                    var a = abcdSnap.val();
-                                    var b = Object.keys(a)[0];
-                                    reserveringsref.child(b).remove();
-                                })
-                                reserveringsref.push({
-                                    Lidnummer: lidnummer,
-                                    Baan: baan,
-                                    Medespeler1: medespeler1,
-                                    Medespeler2: medespeler2,
-                                    Medespeler3: medespeler3,
-                                    Datum: datum,
-                                    Tijd: tijd,
-                                    Email: email
-                                })
-                      }
-                    } else {
-                        self.error = medespeler1 + " heeft al een reservering in ons systeem staan"
-                    }
-                }
-                else if(medespeler1 == datamedespeler3) {
-                    if(datamedespeler1 == "" || datamedespeler1 == "-") {
-                        if(baan == databaan) {
-                          self.succesvol = 'baan beschikbaar'
-                          console.log(baan)
-                          if(datum == datadatum) {
-                              self.succesvol = "datum beschikbaar"
-                              console.log(datum)
-                              if(tijd == datatijd) {
-                                  self.error = "Deze tijd is helaas niet beschikbaar op deze baan kies een andere tijd/baan"
-                                  self.succesvol = ""
-                              } else {
-                                self.aanpassen = false
-                                
-                                const abcd = reserveringsref.orderByChild('Lidnummer').equalTo(self.lidnummer);
-                                abcd.once('value', function(abcdSnap){
-                                    var a = abcdSnap.val();
-                                    var b = Object.keys(a)[0];
-                                    reserveringsref.child(b).remove();
-                                })
-                                reserveringsref.push({
-                                    Lidnummer: lidnummer,
-                                    Baan: baan,
-                                    Medespeler1: medespeler1,
-                                    Medespeler2: medespeler2,
-                                    Medespeler3: medespeler3,
-                                    Datum: datum,
-                                    Tijd: tijd,
-                                    Email: email
-                                })
-                              }
-                          } else {
-                            self.aanpassen = false
-                            
-                            const abcd = reserveringsref.orderByChild('Lidnummer').equalTo(self.lidnummer);
-                                abcd.once('value', function(abcdSnap){
-                                    var a = abcdSnap.val();
-                                    var b = Object.keys(a)[0];
-                                    reserveringsref.child(b).remove();
-                                })
-                                reserveringsref.push({
-                                    Lidnummer: lidnummer,
-                                    Baan: baan,
-                                    Medespeler1: medespeler1,
-                                    Medespeler2: medespeler2,
-                                    Medespeler3: medespeler3,
-                                    Datum: datum,
-                                    Tijd: tijd,
-                                    Email: email
-                                })
-                          }
-                      } else{
-                        self.aanpassen = false
-                        
-                        const abcd = reserveringsref.orderByChild('Lidnummer').equalTo(self.lidnummer);
-                                abcd.once('value', function(abcdSnap){
-                                    var a = abcdSnap.val();
-                                    var b = Object.keys(a)[0];
-                                    reserveringsref.child(b).remove();
-                                })
-                                reserveringsref.push({
-                                    Lidnummer: lidnummer,
-                                    Baan: baan,
-                                    Medespeler1: medespeler1,
-                                    Medespeler2: medespeler2,
-                                    Medespeler3: medespeler3,
-                                    Datum: datum,
-                                    Tijd: tijd,
-                                    Email: email
-                                })
-                      }
-                    } else {
-                        self.error = medespeler1 + " heeft al een reservering in ons systeem staan"
-                    }
-                }
-                else if(medespeler2 == datamedespeler1) {
-                    if(datamedespeler2 == "" || datamedespeler2 == "-") {
-                        if(baan == databaan) {
-                          self.succesvol = 'baan beschikbaar'
-                          console.log(baan)
-                          if(datum == datadatum) {
-                              self.succesvol = "datum beschikbaar"
-                              console.log(datum)
-                              if(tijd == datatijd) {
-                                  self.error = "Deze tijd is helaas niet beschikbaar op deze baan kies een andere tijd/baan"
-                                  self.succesvol = ""
-                              } else {
-                                self.aanpassen = false
-                                
-                                const abcd = reserveringsref.orderByChild('Lidnummer').equalTo(self.lidnummer);
-                                abcd.once('value', function(abcdSnap){
-                                    var a = abcdSnap.val();
-                                    var b = Object.keys(a)[0];
-                                    reserveringsref.child(b).remove();
-                                })
-                                reserveringsref.push({
-                                    Lidnummer: lidnummer,
-                                    Baan: baan,
-                                    Medespeler1: medespeler1,
-                                    Medespeler2: medespeler2,
-                                    Medespeler3: medespeler3,
-                                    Datum: datum,
-                                    Tijd: tijd,
-                                    Email: email
-                                })
-                              }
-                          } else {
-                            self.aanpassen = false
-                            
-                            const abcd = reserveringsref.orderByChild('Lidnummer').equalTo(self.lidnummer);
-                                abcd.once('value', function(abcdSnap){
-                                    var a = abcdSnap.val();
-                                    var b = Object.keys(a)[0];
-                                    reserveringsref.child(b).remove();
-                                })
-                                reserveringsref.push({
-                                    Lidnummer: lidnummer,
-                                    Baan: baan,
-                                    Medespeler1: medespeler1,
-                                    Medespeler2: medespeler2,
-                                    Medespeler3: medespeler3,
-                                    Datum: datum,
-                                    Tijd: tijd,
-                                    Email: email
-                                })
-                          }
-                      } else{
-                        self.aanpassen = false
-                        
-                        const abcd = reserveringsref.orderByChild('Lidnummer').equalTo(self.lidnummer);
-                                abcd.once('value', function(abcdSnap){
-                                    var a = abcdSnap.val();
-                                    var b = Object.keys(a)[0];
-                                    reserveringsref.child(b).remove();
-                                })
-                                reserveringsref.push({
-                                    Lidnummer: lidnummer,
-                                    Baan: baan,
-                                    Medespeler1: medespeler1,
-                                    Medespeler2: medespeler2,
-                                    Medespeler3: medespeler3,
-                                    Datum: datum,
-                                    Tijd: tijd,
-                                    Email: email
-                                })
-                      }
-                    } else {
-                        self.error = medespeler2 + " heeft al een reservering in ons systeem staan"
-                    }
-                }
-                else if(medespeler2 == datamedespeler2) {
-                        if(datamedespeler2 == "" && medespeler3 != "") {
-                            self.error = "Kies eerst een 2e medespeler voordat u een 3e medespeler kiest"
-                        } else {
-                            if(datamedespeler2 == "" || datamedespeler2 == "-") {
+                            if(medespeler1 == "" || medespeler1 == "-" && medespeler2 != "-" || medespeler3 != "-") {
+                                self.error = "Kies eerst medespeler 1 voordat u medespeler 2 of medespeler 3 invult"
+                            } else {
+                            if(datamedespeler1 == "" || datamedespeler1 == "-") {
                                 if(baan == databaan) {
                                     self.succesvol = 'baan beschikbaar'
-                                    console.log(baan)
                                     if(datum == datadatum) {
                                         self.succesvol = "datum beschikbaar"
-                                        console.log(datum)
                                         if(tijd == datatijd) {
                                             self.error = "Deze tijd is helaas niet beschikbaar op deze baan kies een andere tijd/baan"
                                             self.succesvol = ""
                                         } else {
                                             self.aanpassen = false
-                                            
                                             const abcd = reserveringsref.orderByChild('Lidnummer').equalTo(self.lidnummer);
-                                abcd.once('value', function(abcdSnap){
-                                    var a = abcdSnap.val();
-                                    var b = Object.keys(a)[0];
-                                    reserveringsref.child(b).remove();
-                                })
-                                reserveringsref.push({
-                                    Lidnummer: lidnummer,
-                                    Baan: baan,
-                                    Medespeler1: medespeler1,
-                                    Medespeler2: medespeler2,
-                                    Medespeler3: medespeler3,
-                                    Datum: datum,
-                                    Tijd: tijd,
-                                    Email: email
-                                })
+                                            abcd.once('value', function(abcdSnap){
+                                                var a = abcdSnap.val();
+                                                var b = Object.keys(a)[0];
+                                                reserveringsref.child(b).remove();
+                                            })
+                                            reserveringsref.push({
+                                                Lidnummer: lidnummer,
+                                                Baan: baan,
+                                                Medespeler1: medespeler1,
+                                                Medespeler2: medespeler2,
+                                                Medespeler3: medespeler3,
+                                                Datum: datum,
+                                                Tijd: tijd,
+                                                Email: email
+                                            })
+                                            self.error = ""
+                                            self.succesvol = "Reservering succesvol aangepast!"
                                         }
+                                    } else {
+                                        self.aanpassen = false
+                                        const abcd = reserveringsref.orderByChild('Lidnummer').equalTo(self.lidnummer);
+                                            abcd.once('value', function(abcdSnap){
+                                                var a = abcdSnap.val();
+                                                var b = Object.keys(a)[0];
+                                                reserveringsref.child(b).remove();
+                                            })
+                                            reserveringsref.push({
+                                                Lidnummer: lidnummer,
+                                                Baan: baan,
+                                                Medespeler1: medespeler1,
+                                                Medespeler2: medespeler2,
+                                                Medespeler3: medespeler3,
+                                                Datum: datum,
+                                                Tijd: tijd,
+                                                Email: email
+                                            })
+                                            self.error = ""
+                                            self.succesvol = "Reservering succesvol aangepast!"
+                                    }
+                        } else{
+                            self.aanpassen = false
+                            const abcd = reserveringsref.orderByChild('Lidnummer').equalTo(self.lidnummer);
+                                    abcd.once('value', function(abcdSnap){
+                                        var a = abcdSnap.val();
+                                        var b = Object.keys(a)[0];
+                                        reserveringsref.child(b).remove();
+                                    })
+                                    reserveringsref.push({
+                                        Lidnummer: lidnummer,
+                                        Baan: baan,
+                                        Medespeler1: medespeler1,
+                                        Medespeler2: medespeler2,
+                                        Medespeler3: medespeler3,
+                                        Datum: datum,
+                                        Tijd: tijd,
+                                        Email: email
+                                    })
+                                    self.error = ""
+                                    self.succesvol = "Reservering succesvol aangepast!"
+                                }
+                            } else {
+                                self.error = medespeler1 + " heeft al een reservering in ons systeem staan"
+                            }
+                        }
+                    }
+                    else if(medespeler1 == datamedespeler2) {
+                        if(datamedespeler1 == "" || datamedespeler1 == "-") {
+                            if(baan == databaan) {
+                            self.succesvol = 'baan beschikbaar'
+                            if(datum == datadatum) {
+                                self.succesvol = "datum beschikbaar"
+                                if(tijd == datatijd) {
+                                    self.error = "Deze tijd is helaas niet beschikbaar op deze baan kies een andere tijd/baan"
+                                    self.succesvol = ""
+                                } else {
+                                    self.aanpassen = false
+                                    
+                                    const abcd = reserveringsref.orderByChild('Lidnummer').equalTo(self.lidnummer);
+                                    abcd.once('value', function(abcdSnap){
+                                        var a = abcdSnap.val();
+                                        var b = Object.keys(a)[0];
+                                        reserveringsref.child(b).remove();
+                                    })
+                                    reserveringsref.push({
+                                        Lidnummer: lidnummer,
+                                        Baan: baan,
+                                        Medespeler1: medespeler1,
+                                        Medespeler2: medespeler2,
+                                        Medespeler3: medespeler3,
+                                        Datum: datum,
+                                        Tijd: tijd,
+                                        Email: email
+                                    })
+                                    self.error = ""
+                                            self.succesvol = "Reservering succesvol aangepast!"
+                                }
+                            } else {
+                                self.aanpassen = false
+                                
+                                const abcd = reserveringsref.orderByChild('Lidnummer').equalTo(self.lidnummer);
+                                    abcd.once('value', function(abcdSnap){
+                                        var a = abcdSnap.val();
+                                        var b = Object.keys(a)[0];
+                                        reserveringsref.child(b).remove();
+                                    })
+                                    reserveringsref.push({
+                                        Lidnummer: lidnummer,
+                                        Baan: baan,
+                                        Medespeler1: medespeler1,
+                                        Medespeler2: medespeler2,
+                                        Medespeler3: medespeler3,
+                                        Datum: datum,
+                                        Tijd: tijd,
+                                        Email: email
+                                    })
+                                    self.error = ""
+                                            self.succesvol = "Reservering succesvol aangepast!"
+                            }
+                        } else{
+                            self.aanpassen = false
+                            
+                            const abcd = reserveringsref.orderByChild('Lidnummer').equalTo(self.lidnummer);
+                                    abcd.once('value', function(abcdSnap){
+                                        var a = abcdSnap.val();
+                                        var b = Object.keys(a)[0];
+                                        reserveringsref.child(b).remove();
+                                    })
+                                    reserveringsref.push({
+                                        Lidnummer: lidnummer,
+                                        Baan: baan,
+                                        Medespeler1: medespeler1,
+                                        Medespeler2: medespeler2,
+                                        Medespeler3: medespeler3,
+                                        Datum: datum,
+                                        Tijd: tijd,
+                                        Email: email
+                                    })
+                                    self.error = ""
+                                            self.succesvol = "Reservering succesvol aangepast!"
+                        }
+                        } else {
+                            self.error = medespeler1 + " heeft al een reservering in ons systeem staan"
+                        }
+                    }
+                    else if(medespeler1 == datamedespeler3) {
+                        if(datamedespeler1 == "" || datamedespeler1 == "-") {
+                            if(baan == databaan) {
+                            self.succesvol = 'baan beschikbaar'
+                            if(datum == datadatum) {
+                                self.succesvol = "datum beschikbaar"
+                                if(tijd == datatijd) {
+                                    self.error = "Deze tijd is helaas niet beschikbaar op deze baan kies een andere tijd/baan"
+                                    self.succesvol = ""
+                                } else {
+                                    self.aanpassen = false
+                                    
+                                    const abcd = reserveringsref.orderByChild('Lidnummer').equalTo(self.lidnummer);
+                                    abcd.once('value', function(abcdSnap){
+                                        var a = abcdSnap.val();
+                                        var b = Object.keys(a)[0];
+                                        reserveringsref.child(b).remove();
+                                    })
+                                    reserveringsref.push({
+                                        Lidnummer: lidnummer,
+                                        Baan: baan,
+                                        Medespeler1: medespeler1,
+                                        Medespeler2: medespeler2,
+                                        Medespeler3: medespeler3,
+                                        Datum: datum,
+                                        Tijd: tijd,
+                                        Email: email
+                                    })
+                                    self.error = ""
+                                            self.succesvol = "Reservering succesvol aangepast!"
+                                }
+                            } else {
+                                self.aanpassen = false
+                                
+                                const abcd = reserveringsref.orderByChild('Lidnummer').equalTo(self.lidnummer);
+                                    abcd.once('value', function(abcdSnap){
+                                        var a = abcdSnap.val();
+                                        var b = Object.keys(a)[0];
+                                        reserveringsref.child(b).remove();
+                                    })
+                                    reserveringsref.push({
+                                        Lidnummer: lidnummer,
+                                        Baan: baan,
+                                        Medespeler1: medespeler1,
+                                        Medespeler2: medespeler2,
+                                        Medespeler3: medespeler3,
+                                        Datum: datum,
+                                        Tijd: tijd,
+                                        Email: email
+                                    })
+                                    self.error = ""
+                                            self.succesvol = "Reservering succesvol aangepast!"
+                            }
+                        } else{
+                            self.aanpassen = false
+                            
+                            const abcd = reserveringsref.orderByChild('Lidnummer').equalTo(self.lidnummer);
+                                    abcd.once('value', function(abcdSnap){
+                                        var a = abcdSnap.val();
+                                        var b = Object.keys(a)[0];
+                                        reserveringsref.child(b).remove();
+                                    })
+                                    reserveringsref.push({
+                                        Lidnummer: lidnummer,
+                                        Baan: baan,
+                                        Medespeler1: medespeler1,
+                                        Medespeler2: medespeler2,
+                                        Medespeler3: medespeler3,
+                                        Datum: datum,
+                                        Tijd: tijd,
+                                        Email: email
+                                    })
+                                    self.error = ""
+                                            self.succesvol = "Reservering succesvol aangepast!"
+                        }
+                        } else {
+                            self.error = medespeler1 + " heeft al een reservering in ons systeem staan"
+                        }
+                    }
+                    else if(medespeler2 == datamedespeler1) {
+                        if(medespeler2 == "" || medespeler2 == "-" && medespeler3 != "-") {
+                                self.error = "Kies eerst een 2e medespeler voordat u een 3e medespeler kiest"
+                            } else {
+                            if(datamedespeler2 == "" || datamedespeler2 == "-") {
+                                if(baan == databaan) {
+                                self.succesvol = 'baan beschikbaar'
+                                if(datum == datadatum) {
+                                    self.succesvol = "datum beschikbaar"
+                                    if(tijd == datatijd) {
+                                        self.error = "Deze tijd is helaas niet beschikbaar op deze baan kies een andere tijd/baan"
+                                        self.succesvol = ""
                                     } else {
                                         self.aanpassen = false
                                         
                                         const abcd = reserveringsref.orderByChild('Lidnummer').equalTo(self.lidnummer);
-                                abcd.once('value', function(abcdSnap){
-                                    var a = abcdSnap.val();
-                                    var b = Object.keys(a)[0];
-                                    reserveringsref.child(b).remove();
-                                })
-                                reserveringsref.push({
-                                    Lidnummer: lidnummer,
-                                    Baan: baan,
-                                    Medespeler1: medespeler1,
-                                    Medespeler2: medespeler2,
-                                    Medespeler3: medespeler3,
-                                    Datum: datum,
-                                    Tijd: tijd,
-                                    Email: email
-                                })
+                                        abcd.once('value', function(abcdSnap){
+                                            var a = abcdSnap.val();
+                                            var b = Object.keys(a)[0];
+                                            reserveringsref.child(b).remove();
+                                        })
+                                        reserveringsref.push({
+                                            Lidnummer: lidnummer,
+                                            Baan: baan,
+                                            Medespeler1: medespeler1,
+                                            Medespeler2: medespeler2,
+                                            Medespeler3: medespeler3,
+                                            Datum: datum,
+                                            Tijd: tijd,
+                                            Email: email
+                                        })
+                                        self.error = ""
+                                                self.succesvol = "Reservering succesvol aangepast!"
                                     }
-                                } else{
+                                } else {
                                     self.aanpassen = false
                                     
+                                    const abcd = reserveringsref.orderByChild('Lidnummer').equalTo(self.lidnummer);
+                                        abcd.once('value', function(abcdSnap){
+                                            var a = abcdSnap.val();
+                                            var b = Object.keys(a)[0];
+                                            reserveringsref.child(b).remove();
+                                        })
+                                        reserveringsref.push({
+                                            Lidnummer: lidnummer,
+                                            Baan: baan,
+                                            Medespeler1: medespeler1,
+                                            Medespeler2: medespeler2,
+                                            Medespeler3: medespeler3,
+                                            Datum: datum,
+                                            Tijd: tijd,
+                                            Email: email
+                                        })
+                                        self.error = ""
+                                                self.succesvol = "Reservering succesvol aangepast!"
                                 }
-                            } else {
-                                self.error = medespeler2 + " heeft al een reservering in ons systeem staan" 
-                            }
+                            } else{
+                                self.aanpassen = false
+                                
+                                const abcd = reserveringsref.orderByChild('Lidnummer').equalTo(self.lidnummer);
+                                        abcd.once('value', function(abcdSnap){
+                                            var a = abcdSnap.val();
+                                            var b = Object.keys(a)[0];
+                                            reserveringsref.child(b).remove();
+                                        })
+                                        reserveringsref.push({
+                                            Lidnummer: lidnummer,
+                                            Baan: baan,
+                                            Medespeler1: medespeler1,
+                                            Medespeler2: medespeler2,
+                                            Medespeler3: medespeler3,
+                                            Datum: datum,
+                                            Tijd: tijd,
+                                            Email: email
+                                        })
+                                        self.error = ""
+                                        self.succesvol = "Reservering succesvol aangepast!"
+                                    }
+                                } else {
+                                    self.error = medespeler2 + " heeft al een reservering in ons systeem staan"
+                                }   
                         }
                     }
-                else if(medespeler2 == datamedespeler3) {
-                    if(datamedespeler2 == "" || datamedespeler2 == "-") {
-                        if(baan == databaan) {
-                          self.succesvol = 'baan beschikbaar'
-                          console.log(baan)
-                          if(datum == datadatum) {
-                              self.succesvol = "datum beschikbaar"
-                              console.log(datum)
-                              if(tijd == datatijd) {
-                                  self.error = "Deze tijd is helaas niet beschikbaar op deze baan kies een andere tijd/baan"
-                                  self.succesvol = ""
-                              } else {
+                    else if(medespeler2 == datamedespeler2) {
+                            if(medespeler2 == "" || medespeler2 == "-" && medespeler3 != "-") {
+                                self.error = "Kies eerst een 2e medespeler voordat u een 3e medespeler kiest"
+                            } else {
+                                if(datamedespeler2 == "" || datamedespeler2 == "-") {
+                                    if(baan == databaan) {
+                                        self.succesvol = 'baan beschikbaar'
+                                        if(datum == datadatum) {
+                                            self.succesvol = "datum beschikbaar"
+                                            if(tijd == datatijd) {
+                                                self.error = "Deze tijd is helaas niet beschikbaar op deze baan kies een andere tijd/baan"
+                                                self.succesvol = ""
+                                            } else {
+                                                self.aanpassen = false
+                                                
+                                                const abcd = reserveringsref.orderByChild('Lidnummer').equalTo(self.lidnummer);
+                                    abcd.once('value', function(abcdSnap){
+                                        var a = abcdSnap.val();
+                                        var b = Object.keys(a)[0];
+                                        reserveringsref.child(b).remove();
+                                    })
+                                    reserveringsref.push({
+                                        Lidnummer: lidnummer,
+                                        Baan: baan,
+                                        Medespeler1: medespeler1,
+                                        Medespeler2: medespeler2,
+                                        Medespeler3: medespeler3,
+                                        Datum: datum,
+                                        Tijd: tijd,
+                                        Email: email
+                                    })
+                                    self.error = ""
+                                            self.succesvol = "Reservering succesvol aangepast!"
+                                            }
+                                        } else {
+                                            self.aanpassen = false
+                                            
+                                            const abcd = reserveringsref.orderByChild('Lidnummer').equalTo(self.lidnummer);
+                                    abcd.once('value', function(abcdSnap){
+                                        var a = abcdSnap.val();
+                                        var b = Object.keys(a)[0];
+                                        reserveringsref.child(b).remove();
+                                    })
+                                    reserveringsref.push({
+                                        Lidnummer: lidnummer,
+                                        Baan: baan,
+                                        Medespeler1: medespeler1,
+                                        Medespeler2: medespeler2,
+                                        Medespeler3: medespeler3,
+                                        Datum: datum,
+                                        Tijd: tijd,
+                                        Email: email
+                                    })
+                                    self.error = ""
+                                            self.succesvol = "Reservering succesvol aangepast!"
+                                        }
+                                    } else{
+                                        self.aanpassen = false
+                                        
+                                    }
+                                } else {
+                                    self.error = medespeler2 + " heeft al een reservering in ons systeem staan" 
+                                }
+                            }
+                        }
+                    else if(medespeler2 == datamedespeler3) {
+                        if(datamedespeler2 == "" || datamedespeler2 == "-" && datamedespeler3 != "-") {
+                                self.error = "Kies eerst een 2e medespeler voordat u een 3e medespeler kiest"
+                            } else if(datamedespeler2 == "" || datamedespeler2 == "-") {
+                                if(baan == databaan) {
+                                self.succesvol = 'baan beschikbaar'
+                                if(datum == datadatum) {
+                                    self.succesvol = "datum beschikbaar"
+                                    if(tijd == datatijd) {
+                                        self.error = "Deze tijd is helaas niet beschikbaar op deze baan kies een andere tijd/baan"
+                                        self.succesvol = ""
+                                    } else {
+                                        self.aanpassen = false
+                                        
+                                        const abcd = reserveringsref.orderByChild('Lidnummer').equalTo(self.lidnummer);
+                                        abcd.once('value', function(abcdSnap){
+                                            var a = abcdSnap.val();
+                                            var b = Object.keys(a)[0];
+                                            reserveringsref.child(b).remove();
+                                        })
+                                        reserveringsref.push({
+                                            Lidnummer: lidnummer,
+                                            Baan: baan,
+                                            Medespeler1: medespeler1,
+                                            Medespeler2: medespeler2,
+                                            Medespeler3: medespeler3,
+                                            Datum: datum,
+                                            Tijd: tijd,
+                                            Email: email
+                                        })
+                                        self.error = ""
+                                        self.succesvol = "Reservering succesvol aangepast!"
+                                    }
+                                } else {
+                                    self.aanpassen = false
+                                    
+                                    const abcd = reserveringsref.orderByChild('Lidnummer').equalTo(self.lidnummer);
+                                        abcd.once('value', function(abcdSnap){
+                                            var a = abcdSnap.val();
+                                            var b = Object.keys(a)[0];
+                                            reserveringsref.child(b).remove();
+                                        })
+                                        reserveringsref.push({
+                                            Lidnummer: lidnummer,
+                                            Baan: baan,
+                                            Medespeler1: medespeler1,
+                                            Medespeler2: medespeler2,
+                                            Medespeler3: medespeler3,
+                                            Datum: datum,
+                                            Tijd: tijd,
+                                            Email: email
+                                        })
+                                        self.error = ""
+                                        self.succesvol = "Reservering succesvol aangepast!"
+                                }
+                            } else{
                                 self.aanpassen = false
                                 
                                 const abcd = reserveringsref.orderByChild('Lidnummer').equalTo(self.lidnummer);
-                                abcd.once('value', function(abcdSnap){
-                                    var a = abcdSnap.val();
-                                    var b = Object.keys(a)[0];
-                                    reserveringsref.child(b).remove();
-                                })
-                                reserveringsref.push({
-                                    Lidnummer: lidnummer,
-                                    Baan: baan,
-                                    Medespeler1: medespeler1,
-                                    Medespeler2: medespeler2,
-                                    Medespeler3: medespeler3,
-                                    Datum: datum,
-                                    Tijd: tijd,
-                                    Email: email
-                                })
-                              }
-                          } else {
-                            self.aanpassen = false
-                            
-                            const abcd = reserveringsref.orderByChild('Lidnummer').equalTo(self.lidnummer);
-                                abcd.once('value', function(abcdSnap){
-                                    var a = abcdSnap.val();
-                                    var b = Object.keys(a)[0];
-                                    reserveringsref.child(b).remove();
-                                })
-                                reserveringsref.push({
-                                    Lidnummer: lidnummer,
-                                    Baan: baan,
-                                    Medespeler1: medespeler1,
-                                    Medespeler2: medespeler2,
-                                    Medespeler3: medespeler3,
-                                    Datum: datum,
-                                    Tijd: tijd,
-                                    Email: email
-                                })
-                          }
-                      } else{
-                          self.aanpassen = false
-                          
-                          const abcd = reserveringsref.orderByChild('Lidnummer').equalTo(self.lidnummer);
-                                abcd.once('value', function(abcdSnap){
-                                    var a = abcdSnap.val();
-                                    var b = Object.keys(a)[0];
-                                    reserveringsref.child(b).remove();
-                                })
-                                reserveringsref.push({
-                                    Lidnummer: lidnummer,
-                                    Baan: baan,
-                                    Medespeler1: medespeler1,
-                                    Medespeler2: medespeler2,
-                                    Medespeler3: medespeler3,
-                                    Datum: datum,
-                                    Tijd: tijd,
-                                    Email: email
-                                })
-                      }
-                    } else {
-                        self.error = medespeler2 + " heeft al een reservering in ons systeem staan"
+                                        abcd.once('value', function(abcdSnap){
+                                            var a = abcdSnap.val();
+                                            var b = Object.keys(a)[0];
+                                            reserveringsref.child(b).remove();
+                                        })
+                                        reserveringsref.push({
+                                            Lidnummer: lidnummer,
+                                            Baan: baan,
+                                            Medespeler1: medespeler1,
+                                            Medespeler2: medespeler2,
+                                            Medespeler3: medespeler3,
+                                            Datum: datum,
+                                            Tijd: tijd,
+                                            Email: email
+                                        })
+                                        self.error = ""
+                                                self.succesvol = "Reservering succesvol aangepast!"
+                            }
+                            } else {
+                            self.error = medespeler2 + " heeft al een reservering in ons systeem staan"
+                        }
                     }
-                }
-                else if(medespeler3 == datamedespeler1) {
-                    if(datamedespeler3 == "" || datamedespeler3 == "-") {
-                        if(baan == databaan) {
-                          self.succesvol = 'baan beschikbaar'
-                          console.log(baan)
-                          if(datum == datadatum) {
-                              self.succesvol = "datum beschikbaar"
-                              console.log(datum)
-                              if(tijd == datatijd) {
-                                  self.error = "Deze tijd is helaas niet beschikbaar op deze baan kies een andere tijd/baan"
-                                  self.succesvol = ""
-                              } else {
+                    else if(medespeler3 == datamedespeler1) {
+                        if(datamedespeler3 == "" || datamedespeler3 == "-") {
+                            if(baan == databaan) {
+                            self.succesvol = 'baan beschikbaar'
+                            if(datum == datadatum) {
+                                self.succesvol = "datum beschikbaar"
+                                if(tijd == datatijd) {
+                                    self.error = "Deze tijd is helaas niet beschikbaar op deze baan kies een andere tijd/baan"
+                                    self.succesvol = ""
+                                } else {
+                                    self.aanpassen = false
+                                    
+                                    const abcd = reserveringsref.orderByChild('Lidnummer').equalTo(self.lidnummer);
+                                    abcd.once('value', function(abcdSnap){
+                                        var a = abcdSnap.val();
+                                        var b = Object.keys(a)[0];
+                                        reserveringsref.child(b).remove();
+                                    })
+                                    reserveringsref.push({
+                                        Lidnummer: lidnummer,
+                                        Baan: baan,
+                                        Medespeler1: medespeler1,
+                                        Medespeler2: medespeler2,
+                                        Medespeler3: medespeler3,
+                                        Datum: datum,
+                                        Tijd: tijd,
+                                        Email: email
+                                    })
+                                    self.error = ""
+                                            self.succesvol = "Reservering succesvol aangepast1!"
+                                }
+                            } else {
                                 self.aanpassen = false
                                 
                                 const abcd = reserveringsref.orderByChild('Lidnummer').equalTo(self.lidnummer);
-                                abcd.once('value', function(abcdSnap){
-                                    var a = abcdSnap.val();
-                                    var b = Object.keys(a)[0];
-                                    reserveringsref.child(b).remove();
-                                })
-                                reserveringsref.push({
-                                    Lidnummer: lidnummer,
-                                    Baan: baan,
-                                    Medespeler1: medespeler1,
-                                    Medespeler2: medespeler2,
-                                    Medespeler3: medespeler3,
-                                    Datum: datum,
-                                    Tijd: tijd,
-                                    Email: email
-                                })
-                              }
-                          } else {
+                                    abcd.once('value', function(abcdSnap){
+                                        var a = abcdSnap.val();
+                                        var b = Object.keys(a)[0];
+                                        reserveringsref.child(b).remove();
+                                    })
+                                    reserveringsref.push({
+                                        Lidnummer: lidnummer,
+                                        Baan: baan,
+                                        Medespeler1: medespeler1,
+                                        Medespeler2: medespeler2,
+                                        Medespeler3: medespeler3,
+                                        Datum: datum,
+                                        Tijd: tijd,
+                                        Email: email
+                                    })
+                                    self.error = ""
+                                            self.succesvol = "Reservering succesvol aangepast!"
+                            }
+                        } else{
                             self.aanpassen = false
                             
                             const abcd = reserveringsref.orderByChild('Lidnummer').equalTo(self.lidnummer);
-                                abcd.once('value', function(abcdSnap){
-                                    var a = abcdSnap.val();
-                                    var b = Object.keys(a)[0];
-                                    reserveringsref.child(b).remove();
-                                })
-                                reserveringsref.push({
-                                    Lidnummer: lidnummer,
-                                    Baan: baan,
-                                    Medespeler1: medespeler1,
-                                    Medespeler2: medespeler2,
-                                    Medespeler3: medespeler3,
-                                    Datum: datum,
-                                    Tijd: tijd,
-                                    Email: email
-                                })
-                          }
-                      } else{
-                          self.aanpassen = false
-                          
-                          const abcd = reserveringsref.orderByChild('Lidnummer').equalTo(self.lidnummer);
-                                abcd.once('value', function(abcdSnap){
-                                    var a = abcdSnap.val();
-                                    var b = Object.keys(a)[0];
-                                    reserveringsref.child(b).remove();
-                                })
-                                reserveringsref.push({
-                                    Lidnummer: lidnummer,
-                                    Baan: baan,
-                                    Medespeler1: medespeler1,
-                                    Medespeler2: medespeler2,
-                                    Medespeler3: medespeler3,
-                                    Datum: datum,
-                                    Tijd: tijd,
-                                    Email: email
-                                })
-                      }
-                    } else {
-                        self.error = medespeler3 + " heeft al een reservering in ons systeem staan"
+                                    abcd.once('value', function(abcdSnap){
+                                        var a = abcdSnap.val();
+                                        var b = Object.keys(a)[0];
+                                        reserveringsref.child(b).remove();
+                                    })
+                                    reserveringsref.push({
+                                        Lidnummer: lidnummer,
+                                        Baan: baan,
+                                        Medespeler1: medespeler1,
+                                        Medespeler2: medespeler2,
+                                        Medespeler3: medespeler3,
+                                        Datum: datum,
+                                        Tijd: tijd,
+                                        Email: email
+                                    })
+                                    self.error = ""
+                                            self.succesvol = "Reservering succesvol aangepast!"
+                        }
+                        } else {
+                            self.error = medespeler3 + " heeft al een reservering in ons systeem staan"
+                        }
                     }
-                }
-                else if(medespeler3 == datamedespeler2) {
-                    if(datamedespeler3 == "" || datamedespeler3 == "-") {
-                        if(baan == databaan) {
-                          self.succesvol = 'baan beschikbaar'
-                          console.log(baan)
-                          if(datum == datadatum) {
-                              self.succesvol = "datum beschikbaar"
-                              console.log(datum)
-                              if(tijd == datatijd) {
-                                  self.error = "Deze tijd is helaas niet beschikbaar op deze baan kies een andere tijd/baan"
-                                  self.succesvol = ""
-                              } else {
+                    else if(medespeler3 == datamedespeler2) {
+                        if(datamedespeler3 == "" || datamedespeler3 == "-") {
+                            if(baan == databaan) {
+                            self.succesvol = 'baan beschikbaar'
+                            if(datum == datadatum) {
+                                self.succesvol = "datum beschikbaar"
+                                if(tijd == datatijd) {
+                                    self.error = "Deze tijd is helaas niet beschikbaar op deze baan kies een andere tijd/baan"
+                                    self.succesvol = ""
+                                } else {
+                                    self.aanpassen = false
+                                    
+                                    const abcd = reserveringsref.orderByChild('Lidnummer').equalTo(self.lidnummer);
+                                    abcd.once('value', function(abcdSnap){
+                                        var a = abcdSnap.val();
+                                        var b = Object.keys(a)[0];
+                                        reserveringsref.child(b).remove();
+                                    })
+                                    reserveringsref.push({
+                                        Lidnummer: lidnummer,
+                                        Baan: baan,
+                                        Medespeler1: medespeler1,
+                                        Medespeler2: medespeler2,
+                                        Medespeler3: medespeler3,
+                                        Datum: datum,
+                                        Tijd: tijd,
+                                        Email: email
+                                    })
+                                    self.error = ""
+                                            self.succesvol = "Reservering succesvol aangepast!"
+                                }
+                            } else {
                                 self.aanpassen = false
                                 
                                 const abcd = reserveringsref.orderByChild('Lidnummer').equalTo(self.lidnummer);
-                                abcd.once('value', function(abcdSnap){
-                                    var a = abcdSnap.val();
-                                    var b = Object.keys(a)[0];
-                                    reserveringsref.child(b).remove();
-                                })
-                                reserveringsref.push({
-                                    Lidnummer: lidnummer,
-                                    Baan: baan,
-                                    Medespeler1: medespeler1,
-                                    Medespeler2: medespeler2,
-                                    Medespeler3: medespeler3,
-                                    Datum: datum,
-                                    Tijd: tijd,
-                                    Email: email
-                                })
-                              }
-                          } else {
+                                    abcd.once('value', function(abcdSnap){
+                                        var a = abcdSnap.val();
+                                        var b = Object.keys(a)[0];
+                                        reserveringsref.child(b).remove();
+                                    })
+                                    reserveringsref.push({
+                                        Lidnummer: lidnummer,
+                                        Baan: baan,
+                                        Medespeler1: medespeler1,
+                                        Medespeler2: medespeler2,
+                                        Medespeler3: medespeler3,
+                                        Datum: datum,
+                                        Tijd: tijd,
+                                        Email: email
+                                    })
+                                    self.error = ""
+                                            self.succesvol = "Reservering succesvol aangepast!"
+                            }
+                        } else{
                             self.aanpassen = false
                             
                             const abcd = reserveringsref.orderByChild('Lidnummer').equalTo(self.lidnummer);
-                                abcd.once('value', function(abcdSnap){
-                                    var a = abcdSnap.val();
-                                    var b = Object.keys(a)[0];
-                                    reserveringsref.child(b).remove();
-                                })
-                                reserveringsref.push({
-                                    Lidnummer: lidnummer,
-                                    Baan: baan,
-                                    Medespeler1: medespeler1,
-                                    Medespeler2: medespeler2,
-                                    Medespeler3: medespeler3,
-                                    Datum: datum,
-                                    Tijd: tijd,
-                                    Email: email
-                                })
-                          }
-                      } else{
-                          self.aanpassen = false
-                          
-                          const abcd = reserveringsref.orderByChild('Lidnummer').equalTo(self.lidnummer);
-                                abcd.once('value', function(abcdSnap){
-                                    var a = abcdSnap.val();
-                                    var b = Object.keys(a)[0];
-                                    reserveringsref.child(b).remove();
-                                })
-                                reserveringsref.push({
-                                    Lidnummer: lidnummer,
-                                    Baan: baan,
-                                    Medespeler1: medespeler1,
-                                    Medespeler2: medespeler2,
-                                    Medespeler3: medespeler3,
-                                    Datum: datum,
-                                    Tijd: tijd,
-                                    Email: email
-                                })
-                      }
-                    } else {
-                        self.error = medespeler3 + " heeft al een reservering in ons systeem staan"
+                                    abcd.once('value', function(abcdSnap){
+                                        var a = abcdSnap.val();
+                                        var b = Object.keys(a)[0];
+                                        reserveringsref.child(b).remove();
+                                    })
+                                    reserveringsref.push({
+                                        Lidnummer: lidnummer,
+                                        Baan: baan,
+                                        Medespeler1: medespeler1,
+                                        Medespeler2: medespeler2,
+                                        Medespeler3: medespeler3,
+                                        Datum: datum,
+                                        Tijd: tijd,
+                                        Email: email
+                                    })
+                                    self.error = ""
+                                            self.succesvol = "Reservering succesvol aangepast!"
+                        }
+                        } else {
+                            self.error = medespeler3 + " heeft al een reservering in ons systeem staan"
+                        }
                     }
-                }
-                else if(medespeler3 == datamedespeler3) {
-                    if(datamedespeler3 == "" || datamedespeler3 == "-") {
-                        if(baan == databaan) {
-                          self.succesvol = 'baan beschikbaar'
-                          console.log(baan)
-                          if(datum == datadatum) {
-                              self.succesvol = "datum beschikbaar"
-                              console.log(datum)
-                              if(tijd == datatijd) {
-                                  self.error = "Deze tijd is helaas niet beschikbaar op deze baan kies een andere tijd/baan"
-                                  self.succesvol = ""
-                              } else {
+                    else if(medespeler3 == datamedespeler3) {
+                        if(datamedespeler3 == "" || datamedespeler3 == "-") {
+                            if(baan == databaan) {
+                            self.succesvol = 'baan beschikbaar'
+                            if(datum == datadatum) {
+                                self.succesvol = "datum beschikbaar"
+                                if(tijd == datatijd) {
+                                    self.error = "Deze tijd is helaas niet beschikbaar op deze baan kies een andere tijd/baan"
+                                    self.succesvol = ""
+                                } else {
+                                    self.aanpassen = false
+                                    
+                                    const abcd = reserveringsref.orderByChild('Lidnummer').equalTo(self.lidnummer);
+                                    abcd.once('value', function(abcdSnap){
+                                        var a = abcdSnap.val();
+                                        var b = Object.keys(a)[0];
+                                        reserveringsref.child(b).remove();
+                                    })
+                                    reserveringsref.push({
+                                        Lidnummer: lidnummer,
+                                        Baan: baan,
+                                        Medespeler1: medespeler1,
+                                        Medespeler2: medespeler2,
+                                        Medespeler3: medespeler3,
+                                        Datum: datum,
+                                        Tijd: tijd,
+                                        Email: email
+                                    })
+                                    self.error = ""
+                                            self.succesvol = "Reservering succesvol aangepast!"
+                                }
+                            } else {
                                 self.aanpassen = false
                                 
                                 const abcd = reserveringsref.orderByChild('Lidnummer').equalTo(self.lidnummer);
-                                abcd.once('value', function(abcdSnap){
-                                    var a = abcdSnap.val();
-                                    var b = Object.keys(a)[0];
-                                    reserveringsref.child(b).remove();
-                                })
-                                reserveringsref.push({
-                                    Lidnummer: lidnummer,
-                                    Baan: baan,
-                                    Medespeler1: medespeler1,
-                                    Medespeler2: medespeler2,
-                                    Medespeler3: medespeler3,
-                                    Datum: datum,
-                                    Tijd: tijd,
-                                    Email: email
-                                })
-                              }
-                          } else {
+                                    abcd.once('value', function(abcdSnap){
+                                        var a = abcdSnap.val();
+                                        var b = Object.keys(a)[0];
+                                        reserveringsref.child(b).remove();
+                                    })
+                                    reserveringsref.push({
+                                        Lidnummer: lidnummer,
+                                        Baan: baan,
+                                        Medespeler1: medespeler1,
+                                        Medespeler2: medespeler2,
+                                        Medespeler3: medespeler3,
+                                        Datum: datum,
+                                        Tijd: tijd,
+                                        Email: email
+                                    })
+                                    self.error = ""
+                                    self.succesvol = "Reservering succesvol aangepast!"
+                            }
+                        } else{
                             self.aanpassen = false
-                            
                             const abcd = reserveringsref.orderByChild('Lidnummer').equalTo(self.lidnummer);
-                                abcd.once('value', function(abcdSnap){
-                                    var a = abcdSnap.val();
-                                    var b = Object.keys(a)[0];
-                                    reserveringsref.child(b).remove();
-                                })
-                                reserveringsref.push({
-                                    Lidnummer: lidnummer,
-                                    Baan: baan,
-                                    Medespeler1: medespeler1,
-                                    Medespeler2: medespeler2,
-                                    Medespeler3: medespeler3,
-                                    Datum: datum,
-                                    Tijd: tijd,
-                                    Email: email
-                                })
-                          }
-                      } else{
-                          self.aanpassen = false
-                          const abcd = reserveringsref.orderByChild('Lidnummer').equalTo(self.lidnummer);
-                                abcd.once('value', function(abcdSnap){
-                                    var a = abcdSnap.val();
-                                    var b = Object.keys(a)[0];
-                                    reserveringsref.child(b).remove();
-                                })
-                                reserveringsref.push({
-                                    Lidnummer: lidnummer,
-                                    Baan: baan,
-                                    Medespeler1: medespeler1,
-                                    Medespeler2: medespeler2,
-                                    Medespeler3: medespeler3,
-                                    Datum: datum,
-                                    Tijd: tijd,
-                                    Email: email
-                                })
-                      }
-                    } else {
-                        self.error = medespeler3 + " heeft al een reservering in ons systeem staan"
+                                    abcd.once('value', function(abcdSnap){
+                                        var a = abcdSnap.val();
+                                        var b = Object.keys(a)[0];
+                                        reserveringsref.child(b).remove();
+                                    })
+                                    reserveringsref.push({
+                                        Lidnummer: lidnummer,
+                                        Baan: baan,
+                                        Medespeler1: medespeler1,
+                                        Medespeler2: medespeler2,
+                                        Medespeler3: medespeler3,
+                                        Datum: datum,
+                                        Tijd: tijd,
+                                        Email: email
+                                    })
+                                    self.error = ""
+                                            self.succesvol = "Reservering succesvol aangepast!"
+                            }
+                        } else {
+                            self.error = medespeler3 + " heeft al een reservering in ons systeem staan"
+                        }
                     }
                 }
-                    }
-                });
             });
-        }
-    },
+        });
+    }
+},
 
     apollo: {
         allMijnReserverings: gql`{
@@ -1032,6 +1086,7 @@ export default {
                 }
                 aanpassenKnop
                 doorvoerenKnop
+                verwijderen
             }
         }`
     }    

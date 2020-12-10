@@ -211,3 +211,7 @@ p {
   font-weight: bold;
 
 }
+
+.verwijder {
+  cursor: pointer;
+}
