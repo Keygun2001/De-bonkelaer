@@ -1,8 +1,8 @@
 <template>
     <div>
         <div class="bg-blue-900">
-            <div class="container mx-auto">
-                <div class="flex md:justify-center md:items-center md:flex-no-wrap flex-wrap mx-auto md:w-10/12 w-full md:py-32 py-8 border-grey-bottom">
+            <div class="container">
+                <div class="flex md:justify-center md:items-center md:flex-no-wrap flex-wrap mx-auto md:py-32 py-8 border-grey-bottom">
                     <div class="md:w-3/12 w-full">
                         <div v-for="(footer, index) in footer" :key="index" class="w-24 leading-8">
                             <p class="text-white nuxtfooterlinkp">

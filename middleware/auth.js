@@ -1,4 +1,5 @@
 import firebase from 'firebase'
+import 'firebase/database'
 
 export default function ({ app, route, store, redirect }) {
     const user = store.state.user;

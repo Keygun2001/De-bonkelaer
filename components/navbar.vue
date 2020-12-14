@@ -1,13 +1,13 @@
 <template>
-    <div class="w-full navbar">
+    <div class="w-full">
         <div class="navbarcontainer w-full flex">
-          <div class="flex justify-center">
-            <div class="flex items-center lg:w-2/12 w-full">
+          <div class="w-full flex justify-center">
+            <div class="flex justify-start items-center lg:w-2/12 w-full">
               <a class="logo" href="/">
                 <Logosm />
               </a>
             </div>
-            <div class="flex items-center lg:w-6/12">
+            <div class="flex items-center">
                 <nav class="hidden lg:flex">
                     <ul class="flex menu">
                         <li class="menu--list">
