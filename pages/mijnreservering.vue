@@ -12,7 +12,7 @@
                         </p>
                     </div>
                 </div>
-                <div v-if="lidnummer" class="lg:flex inline lg:w-10/12 w-full mx-auto">
+                <div v-if="medespeler1" class="lg:flex inline lg:w-10/12 w-full mx-auto">
                     <table v-if="aanpassen == false" class="reserveringtable lg:inline flex lg:w-9/12 w-full">
                         <tr class="rev">
                             <td>
@@ -118,22 +118,24 @@
                         </tr>
                     </table>
                 </div>
-                <div class="lg:py-0 py-8 lg:block flex justify-center w-10/12 mx-auto" v-if="aanpassen == false">
-                        <button @click="aanpassen = !aanpassen" class="downloadbtn">{{ reservering.aanpassenKnop }}</button>
-                    </div>
-                <div class="lg:py-0 py-8 lg:block flex justify-center items-center w-10/12 mx-auto" v-else>
-                    <button @click="reserveren" class="downloadbtn lg:mt-4 mt-0">{{ reservering.doorvoerenKnop }}</button>
-                    <button @click="verwijderen" class="flex items-center verwijder lg:py-4 py-0 lg:ml-0 ml-4">
-                        <div class="kruis">
-                            <div class="een"></div>
-                            <div class="twee"></div>
+                <div v-if="medespeler1">
+                    <div class="lg:py-0 py-8 lg:block flex justify-center w-10/12 mx-auto" v-if="aanpassen == false">
+                            <button @click="aanpassen = !aanpassen" class="downloadbtn">{{ reservering.aanpassenKnop }}</button>
                         </div>
-                        <p class="rodetekst">
-                            {{ reservering.verwijderen }}
-                        </p>
-                    </button>
+                    <div class="lg:py-0 py-8 lg:block flex justify-center items-center w-10/12 mx-auto" v-else>
+                        <button @click="reserveren" class="downloadbtn lg:mt-4 mt-0">{{ reservering.doorvoerenKnop }}</button>
+                        <button @click="verwijderen" class="flex items-center verwijder lg:py-4 py-0 lg:ml-0 ml-4">
+                            <div class="kruis">
+                                <div class="een"></div>
+                                <div class="twee"></div>
+                            </div>
+                            <p class="rodetekst">
+                                {{ reservering.verwijderen }}
+                            </p>
+                        </button>
+                    </div>
                 </div>
-                <div v-if="error || succesvol" class="lg:block flex justify-center w-10/12 mx-auto">
+                <div v-if="error || succesvol" class="lg:block flex justify-center md:w-10/12 w-full mx-auto">
                     <p class="rodetekst">
                         {{ error }}
                     </p>
@@ -169,6 +171,8 @@ export default {
             tijd: '',
             error: '',
             succesvol: '',
+            voornaam: '',
+            achternaam: ''
         }
     },
 
@@ -178,14 +182,25 @@ export default {
 
         gebruikersref.once('value', function(snapshot){
             var voornamen = ''
+            var achternamen = ''
             var lidnummers = ''
             const medespelers = []
+            const email = self.email
+            const lidnummer = ''
+            const voornaam = ''
+            const achternaam = ''
 
             snapshot.forEach(function(childSnapshot){
                 const data = childSnapshot.exportVal();
                 self.voornamen = data.Voornaam
+                self.achternamen = data.Achternaam
                 self.lidnummers = data.Lidnummer
-                medespelers.push(self.voornamen + " - " + self.lidnummers);
+                medespelers.push(self.voornamen + " " + self.achternamen + " - " + self.lidnummers);
+                if(email == data.Email) {
+                    self.lidnummer = data.Lidnummer
+                    self.voornaam = data.Voornaam
+                    self.achternaam = data.Achternaam
+                }
             });
             self.medespelers = medespelers;
         });
@@ -193,9 +208,8 @@ export default {
         const reserveringsref = firebase.database().ref('Reserveringen/')
         reserveringsref.once('value', function(snapshot){
             const email = self.email
-            const lidnummer = ''
+            const lidnummer = self.lidnummer
 
-            const datalidnummer = ''
             const medespeler1 = ''
             const medespeler2 = ''
             const medespeler3 = ''
@@ -203,11 +217,23 @@ export default {
             const tijd = ''
             const baan = ''
             const error = ''
+            const voornaam = ''
+            const achternaam = ''
             
 
             snapshot.forEach(function(childSnapShot){
                 const data = childSnapShot.exportVal()
                 if(email == data.Email) {
+                    self.medespeler1 = data.Medespeler1
+                    self.medespeler2 = data.Medespeler2
+                    self.medespeler3 = data.Medespeler3
+                    self.datum = data.Datum
+                    self.tijd = data.Tijd
+                    self.baan = data.Baan
+                    self.voornaam = data.Voornaam
+                    self.achternaam = data.Achternaam
+                }
+                if(data.Medespeler1 == self.voornaam + " " + self.achternaam + " - " + self.lidnummer) {
                     self.lidnummer = data.Lidnummer
                     self.medespeler1 = data.Medespeler1
                     self.medespeler2 = data.Medespeler2
@@ -215,9 +241,33 @@ export default {
                     self.datum = data.Datum
                     self.tijd = data.Tijd
                     self.baan = data.Baan
+                    self.voornaam = data.Voornaam
+                    self.achternaam = data.Achternaam
+                }
+                if(data.Medespeler2 == self.voornaam + " " + self.achternaam + " - " + self.lidnummer) {
+                    self.lidnummer = data.Lidnummer
+                    self.medespeler1 = data.Medespeler1
+                    self.medespeler2 = data.Medespeler2
+                    self.medespeler3 = data.Medespeler3
+                    self.datum = data.Datum
+                    self.tijd = data.Tijd
+                    self.baan = data.Baan
+                    self.voornaam = data.Voornaam
+                    self.achternaam = data.Achternaam
+                }
+                if(data.Medespeler3 == self.voornaam + " " + self.achternaam + " - " + self.lidnummer) {
+                    self.lidnummer = data.Lidnummer
+                    self.medespeler1 = data.Medespeler1
+                    self.medespeler2 = data.Medespeler2
+                    self.medespeler3 = data.Medespeler3
+                    self.datum = data.Datum
+                    self.tijd = data.Tijd
+                    self.baan = data.Baan
+                    self.voornaam = data.Voornaam
+                    self.achternaam = data.Achternaam
                 }
             });
-            if(self.lidnummer) {
+            if(self.medespeler1) {
                 return
             } else {
                 self.error = "U heeft geen reservering in ons systeem staan"
@@ -268,6 +318,9 @@ export default {
                 let datagelijkmedespeler2 = 'speler2'
                 let datagelijkmedespeler3 = 'speler3'
                 let error = self.error
+                let dataafschermdatum = ''
+                let dataspelernummer = ''
+                let dataafschermbaan = ''
 
                 snapshot.forEach(function(childSnapshot){
                     const data = childSnapshot.val()
@@ -277,6 +330,18 @@ export default {
                         } else {
                             databaan = data.Baan
                         }
+                    }
+                    if(self.medespeler1 == data.Voornaam + " " + data.Achternaam + " - " + data.Lidnummer) {
+                        dataspelernummer = self.medespeler1
+                    }
+                    if(self.medespeler2 == data.Voornaam + " " + data.Achternaam + " - " + data.Lidnummer) {
+                        dataspelernummer = self.medespeler2
+                    }
+                    if(self.medespeler3 == data.Voornaam + " " + data.Achternaam + " - " + data.Lidnummer) {
+                        dataspelernummer = self.medespeler3
+                    }
+                    if(self.voornaam + " " + self.achternaam + " - " + data.Lidnummer == data.Lidnummer) {
+                        dataspelernummer = self.voornaam + " " + self.achternaam + " - " + data.Lidnummer
                     }
                     if(self.medespeler1 == data.Medespeler1) {
                         if(self.email == data.Email) {
@@ -346,19 +411,30 @@ export default {
                             datagelijkdatum = data.Datum
                         } else {
                             datadatum = data.Datum
+                            if(self.tijd == data.Tijd) {
+                                if(self.email == data.Email) {
+                                    datagelijktijd = data.Tijd
+                                } else {
+                                    datatijd = data.Tijd
+                                }
+                            }
                         }
                     }
-                    if(self.tijd == data.Tijd) {
-                        if(self.email == data.Email) {
-                            datagelijktijd = data.Tijd
-                        } else {
-                            datatijd = data.Tijd
-                        }
+                    if(self.datum == data.Afschermdatum) {
+                        dataafschermdatum = data.Afschermdatum
+                    }
+                    if(self.court == data.Afschermbaan) {
+                        dataafschermbaan = data.Afschermbaan
                     }
                     if(self.email == data.Email) {
                         self.dataemail = data.Email
                     }
                     if(self.email == data.Email) {
+                        if(dataafschermbaan) {
+                            if(dataafschermdatum) {
+                                self.error = "Deze baan is op deze datum afgeschermd."
+                            }
+                        } 
                         if(medespeler1 == datamedespeler1) {
                             if(medespeler1 == "" || medespeler1 == "-" && medespeler2 != "-" || medespeler3 != "-") {
                                 self.error = "Kies eerst medespeler 1 voordat u medespeler 2 of medespeler 3 invult"
@@ -1062,6 +1138,8 @@ export default {
                             self.error = medespeler3 + " heeft al een reservering in ons systeem staan"
                         }
                     }
+                } else if(self.email != data.Email) {
+                    self.error = "Sorry het is niet mogelijk een reservering aan te passen die u niet gemaakt hebt. Het verwijderen ervan is wel mogelijk."
                 }
             });
         });

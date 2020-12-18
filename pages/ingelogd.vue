@@ -111,7 +111,7 @@
                                         <option value="baan2">{{ data.baanTwee }}</option>
                                     </select>
                                 </div>
-                                <div class="flex md:items-center md:flex-row flex-col md:mt-0 mt-4">
+                                <div class="flex md:items-center md:flex-row flex-col mt-4">
                                     <p class="md:w-2/12 w-full md:mb-0 mb-4">
                                         {{ data.datumtijdinput }}
                                     </p>
@@ -186,8 +186,9 @@ export default {
             snapshot.forEach(function(childSnapshot){
                 const data = childSnapshot.exportVal();
                 self.voornamen = data.Voornaam
+                self.achternamen = data.Achternaam
                 self.lidnummers = data.Lidnummer
-                medespelers.push(self.voornamen + " - " + self.lidnummers);
+                medespelers.push(self.voornamen + " " + self.achternamen + " - " + self.lidnummers);
                 if(data.Email == email) {
                     self.voornaam = data.Voornaam;
                     self.achternaam = data.Achternaam;
@@ -300,9 +301,12 @@ export default {
                 var medespeler3 = self.medespeler3
                 const datum = self.datum
                 const tijd = self.gekozentijd
+                const voornaam = self.voornaam
+                const achternaam = self.achternaam
 
                 //get database data
                 let datanummer = ''
+                let dataspelernummer = ''
                 let databaan = ''
                 let datadatum = ''
                 let datatijd = ''
@@ -317,6 +321,18 @@ export default {
                     const data = childSnapshot.val()
                     if (self.lidnummer == data.Lidnummer) {
                         datanummer = data.Lidnummer
+                    }
+                    if(self.medespeler1 == data.Voornaam + " " + data.Achternaam + " - " + data.Lidnummer) {
+                        dataspelernummer = self.medespeler1
+                    }
+                    if(self.medespeler2 == data.Voornaam + " " + data.Achternaam + " - " + data.Lidnummer) {
+                        dataspelernummer = self.medespeler2
+                    }
+                    if(self.medespeler3 == data.Voornaam + " " + data.Achternaam + " - " + data.Lidnummer) {
+                        dataspelernummer = self.medespeler3
+                    }
+                    if(self.voornaam + " " + self.achternaam + " - " + data.Lidnummer == data.Lidnummer) {
+                        dataspelernummer = self.voornaam + " " + self.achternaam + " - " + data.Lidnummer
                     }
                     if(self.court == data.Baan) {
                         databaan = data.Baan
@@ -350,9 +366,9 @@ export default {
                     }
                     if(self.datum == data.Datum) {
                         datadatum = data.Datum
-                    }
-                    if(self.gekozentijd == data.Tijd) {
-                        datatijd = data.Tijd
+                        if(self.gekozentijd == data.Tijd) {
+                            datatijd = data.Tijd
+                        }
                     }
                     if(self.court == data.Afschermbaan) {
                         dataafschermbaan = data.Afschermbaan
@@ -367,8 +383,9 @@ export default {
                     } else {
                         if(datanummer) {
                             self.error = "U heeft al een reservering in ons systeem staan."
-                        }
-                        else if(medespeler1 == datamedespeler1) {
+                        } else if(dataspelernummer) {
+                            self.error = dataspelernummer + " heeft al een reservering in ons systeem staan"
+                        } else if(medespeler1 == datamedespeler1) {
                             if(datamedespeler1 == "" || datamedespeler1 == "-") {
                                 if(court == databaan) {
                                     self.succesvol = 'baan beschikbaar'
@@ -394,7 +411,9 @@ export default {
                                                 Medespeler3: medespeler3,
                                                 Datum: datum,
                                                 Tijd: tijd,
-                                                Email: email
+                                                Email: email,
+                                                Voornaam: voornaam,
+                                                Achternaam: achternaam
                                             })
                                         }
                                     } else {
@@ -414,7 +433,9 @@ export default {
                                             Medespeler3: medespeler3,
                                             Datum: datum,
                                             Tijd: tijd,
-                                            Email: email
+                                            Email: email,
+                                            Voornaam: voornaam,
+                                            Achternaam: achternaam
                                         })
                                     }
                                 } else{
@@ -434,7 +455,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                        Voornaam: voornaam,
+                                        Achternaam: achternaam
                                     })
                                 }
                             } else {
@@ -459,16 +482,18 @@ export default {
                                         if(medespeler3 == "") {
                                             medespeler3 = "-"
                                         }
-                                reserveringref.push({
-                                        Lidnummer: lidnummer,
-                                        Baan: court,
-                                        Medespeler1: medespeler1,
-                                        Medespeler2: medespeler2,
-                                        Medespeler3: medespeler3,
-                                        Datum: datum,
-                                        Tijd: tijd,
-                                        Email: email
-                                })
+                                        reserveringref.push({
+                                            Lidnummer: lidnummer,
+                                            Baan: court,
+                                            Medespeler1: medespeler1,
+                                            Medespeler2: medespeler2,
+                                            Medespeler3: medespeler3,
+                                            Datum: datum,
+                                            Tijd: tijd,
+                                            Email: email,
+                                            Voornaam: voornaam,
+                                            Achternaam: achternaam
+                                        })
                                     }
                                 } else {
                                     self.error = ""
@@ -479,16 +504,18 @@ export default {
                                         if(medespeler3 == "") {
                                             medespeler3 = "-"
                                         }
-                                reserveringref.push({
-                                        Lidnummer: lidnummer,
-                                        Baan: court,
-                                        Medespeler1: medespeler1,
-                                        Medespeler2: medespeler2,
-                                        Medespeler3: medespeler3,
-                                        Datum: datum,
-                                        Tijd: tijd,
-                                        Email: email
-                                })
+                                        reserveringref.push({
+                                            Lidnummer: lidnummer,
+                                            Baan: court,
+                                            Medespeler1: medespeler1,
+                                            Medespeler2: medespeler2,
+                                            Medespeler3: medespeler3,
+                                            Datum: datum,
+                                            Tijd: tijd,
+                                            Email: email,
+                                            Voornaam: voornaam,
+                                            Achternaam: achternaam
+                                        })
                                 }
                             } else{
                                 self.error = ""
@@ -499,17 +526,19 @@ export default {
                                         if(medespeler3 == "") {
                                             medespeler3 = "-"
                                         }
-                                reserveringref.push({
-                                        Lidnummer: lidnummer,
-                                        Baan: court,
-                                        Medespeler1: medespeler1,
-                                        Medespeler2: medespeler2,
-                                        Medespeler3: medespeler3,
-                                        Datum: datum,
-                                        Tijd: tijd,
-                                        Email: email
-                                })
-                            }
+                                        reserveringref.push({
+                                            Lidnummer: lidnummer,
+                                            Baan: court,
+                                            Medespeler1: medespeler1,
+                                            Medespeler2: medespeler2,
+                                            Medespeler3: medespeler3,
+                                            Datum: datum,
+                                            Tijd: tijd,
+                                            Email: email,
+                                            Voornaam: voornaam,
+                                            Achternaam: achternaam
+                                        })
+                                }
                             } else {
                                 self.error = medespeler1 + " heeft al een reservering in ons systeem staan"
                             }
@@ -540,7 +569,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                        Voornaam: voornaam,
+                                        Achternaam: achternaam
                                 })
                                     }
                                 } else {
@@ -560,7 +591,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                        Voornaam: voornaam,
+                                        Achternaam: achternaam
                                 })
                                 }
                             } else{
@@ -580,7 +613,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                        Voornaam: voornaam,
+                                        Achternaam: achternaam
                                 })
                             }
                             } else {
@@ -613,7 +648,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                        Voornaam: voornaam,
+                                        Achternaam: achternaam
                                 })
                                     }
                                 } else {
@@ -633,7 +670,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                        Voornaam: voornaam,
+                                        Achternaam: achternaam
                                 })
                                 }
                             } else{
@@ -653,7 +692,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                        Voornaam: voornaam,
+                                        Achternaam: achternaam
                                 })
                             }
                             } else {
@@ -689,7 +730,9 @@ export default {
                                                         Medespeler3: medespeler3,
                                                         Datum: datum,
                                                         Tijd: tijd,
-                                                        Email: email
+                                                        Email: email,
+                                                        Voornaam: voornaam,
+                                                        Achternaam: achternaam
                                                     })
                                                 }
                                             } else {
@@ -709,7 +752,9 @@ export default {
                                                     Medespeler3: medespeler3,
                                                     Datum: datum,
                                                     Tijd: tijd,
-                                                    Email: email
+                                                    Email: email,
+                                                    Voornaam: voornaam,
+                                                    Achternaam: achternaam
                                                 })
                                             }
                                         } else{
@@ -729,7 +774,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                        Voornaam: voornaam,
+                                        Achternaam: achternaam
                                 })
                                         }
                                     } else {
@@ -763,7 +810,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                        Voornaam: voornaam,
+                                        Achternaam: achternaam
                                 })
                                     }
                                 } else {
@@ -783,7 +832,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                        Voornaam: voornaam,
+                                        Achternaam: achternaam
                                 })
                                 }
                             } else{
@@ -803,7 +854,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                        Voornaam: voornaam,
+                                        Achternaam: achternaam
                                 })
                             }
                             } else {
@@ -836,7 +889,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                        Voornaam: voornaam,
+                                        Achternaam: achternaam
                                 })
                                     }
                                 } else {
@@ -856,7 +911,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                        Voornaam: voornaam,
+                                        Achternaam: achternaam
                                 })
                                 }
                             } else{
@@ -876,7 +933,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                        Voornaam: voornaam,
+                                        Achternaam: achternaam
                                 })
                             }
                             } else {
@@ -909,7 +968,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                        Voornaam: voornaam,
+                                        Achternaam: achternaam
                                 })
                                     }
                                 } else {
@@ -929,7 +990,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                        Voornaam: voornaam,
+                                        Achternaam: achternaam
                                     })
                                 }
                             } else{
@@ -949,7 +1012,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                        Voornaam: voornaam,
+                                        Achternaam: achternaam
                                 })
                             }
                             } else {
@@ -982,7 +1047,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                        Voornaam: voornaam,
+                                        Achternaam: achternaam
                                 })
                                     }
                                 } else {
@@ -1002,7 +1069,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                        Voornaam: voornaam,
+                                        Achternaam: achternaam
                                 })
                                 }
                             } else{
@@ -1022,7 +1091,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                        Voornaam: voornaam,
+                                        Achternaam: achternaam
                                 })
                             }
                             } else {
@@ -1038,7 +1109,9 @@ export default {
                                 Medespeler3: medespeler3,
                                 Datum: datum,
                                 Tijd: tijd,
-                                Email: email
+                                Email: email,
+                                Voornaam: voornaam,
+                                Achternaam: achternaam
                             })
                         }
                     }
@@ -1072,7 +1145,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                        Voornaam: voornaam,
+                                        Achternaam: achternaam
                                 })
                                     }
                                 } else {
@@ -1092,7 +1167,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                        Voornaam: voornaam,
+                                        Achternaam: achternaam
                                 })
                                 }
                             } else{
@@ -1112,7 +1189,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                        Voornaam: voornaam,
+                                        Achternaam: achternaam
                                 })
                             }
                             } else {
@@ -1145,7 +1224,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                        Voornaam: voornaam,
+                                        Achternaam: achternaam
                                 })
                                     }
                                 } else {
@@ -1165,7 +1246,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                        Voornaam: voornaam,
+                                        Achternaam: achternaam
                                 })
                                 }
                             } else{
@@ -1185,7 +1268,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                        Voornaam: voornaam,
+                                        Achternaam: achternaam
                                 })
                             }
                             } else {
@@ -1218,7 +1303,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                        Voornaam: voornaam,
+                                        Achternaam: achternaam
                                 })
                                     }
                                 } else {
@@ -1238,7 +1325,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                        Voornaam: voornaam,
+                                        Achternaam: achternaam
                                 })
                                 }
                             } else{
@@ -1258,7 +1347,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                        Voornaam: voornaam,
+                                        Achternaam: achternaam
                                 })
                             }
                             } else {
@@ -1291,7 +1382,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                        Voornaam: voornaam,
+                                        Achternaam: achternaam
                                 })
                                     }
                                 } else {
@@ -1311,7 +1404,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                        Voornaam: voornaam,
+                                        Achternaam: achternaam
                                 })
                                 }
                             } else{
@@ -1331,7 +1426,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                        Voornaam: voornaam,
+                                        Achternaam: achternaam
                                 })
                             }
                             } else {
@@ -1367,7 +1464,9 @@ export default {
                                                         Medespeler3: medespeler3,
                                                         Datum: datum,
                                                         Tijd: tijd,
-                                                        Email: email
+                                                        Email: email,
+                                                        Voornaam: voornaam,
+                                                        Achternaam: achternaam
                                                     })
                                                 }
                                             } else {
@@ -1387,7 +1486,9 @@ export default {
                                                     Medespeler3: medespeler3,
                                                     Datum: datum,
                                                     Tijd: tijd,
-                                                    Email: email
+                                                    Email: email,
+                                                    Voornaam: voornaam,
+                                                    Achternaam: achternaam
                                                 })
                                             }
                                         } else{
@@ -1407,7 +1508,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                        Voornaam: voornaam,
+                                        Achternaam: achternaam
                                 })
                                         }
                                     } else {
@@ -1441,7 +1544,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                        Voornaam: voornaam,
+                                        Achternaam: achternaam
                                 })
                                     }
                                 } else {
@@ -1461,7 +1566,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                        Voornaam: voornaam,
+                                        Achternaam: achternaam
                                 })
                                 }
                             } else{
@@ -1481,7 +1588,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                        Voornaam: voornaam,
+                                        Achternaam: achternaam
                                 })
                             }
                             } else {
@@ -1514,7 +1623,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                        Voornaam: voornaam,
+                                        Achternaam: achternaam
                                 })
                                     }
                                 } else {
@@ -1534,7 +1645,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                        Voornaam: voornaam,
+                                        Achternaam: achternaam
                                 })
                                 }
                             } else{
@@ -1554,7 +1667,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                        Voornaam: voornaam,
+                                        Achternaam: achternaam
                                 })
                             }
                             } else {
@@ -1587,7 +1702,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                        Voornaam: voornaam,
+                                        Achternaam: achternaam
                                 })
                                     }
                                 } else {
@@ -1607,7 +1724,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                        Voornaam: voornaam,
+                                        Achternaam: achternaam
                                     })
                                 }
                             } else{
@@ -1627,7 +1746,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                        Voornaam: voornaam,
+                                        Achternaam: achternaam
                                 })
                             }
                             } else {
@@ -1660,7 +1781,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                        Voornaam: voornaam,
+                                        Achternaam: achternaam
                                 })
                                     }
                                 } else {
@@ -1680,7 +1803,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                        Voornaam: voornaam,
+                                        Achternaam: achternaam
                                 })
                                 }
                             } else{
@@ -1700,7 +1825,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                        Voornaam: voornaam,
+                                        Achternaam: achternaam
                                 })
                             }
                             } else {
@@ -1716,7 +1843,9 @@ export default {
                                 Medespeler3: medespeler3,
                                 Datum: datum,
                                 Tijd: tijd,
-                                Email: email
+                                Email: email,
+                                Voornaam: voornaam,
+                                Achternaam: achternaam
                             })
                         }
                 }

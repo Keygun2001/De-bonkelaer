@@ -13,38 +13,40 @@
                     </div>
                     <div class="mt-12">
                         <form @submit.prevent="pressed" class="w-full">
-                            <div class="flex items-center">
-                                <div class="sm:w-2/12 w-4/12">
+                            <div class="flex md:flex-row flex-col items-center">
+                                <div class="md:w-2/12 w-full">
                                     <p>
                                         {{ item.inloggen[0].lidnummer }}
                                     </p>
                                 </div>
-                                <input class="rounded emailbox" v-model="email" type="email" name="lidnummer" />
-                            </div>
-                            <div class="flex items-center mt-2">
-                                <div class="sm:w-2/12 w-4/12">
+                                <input type="text" v-model="email" class="emailbox rounded md:w-auto w-full" />
+                            </div>  
+                            <div class="flex md:flex-row flex-col items-center mt-2">
+                                <div class="md:w-2/12 w-full">
                                     <p>
                                         {{ item.inloggen[0].wachtwoord }}
                                     </p>
                                 </div>
-                                <div class="flex items-center w-8/12">
-                                    <input class="rounded emailbox" v-model="password" :type="visibility" :class="{'u-full-width' : !onlyunder, 'u-full-width onlyunder': onlyunder}"  :maxlength='maxlength' :placeholder="placeholder" v-bind:value="value"  v-on:input="$emit('input', $event.target.value)">
+                                <div class="flex items-center md:w-auto w-full">
+                                    <div class="w-full">
+                                        <input class="rounded emailbox md:w-auto w-full" v-model="password" :type="visibility" :class="{'u-full-width' : !onlyunder, 'u-full-width onlyunder': onlyunder}"  :maxlength='maxlength' :placeholder="placeholder" v-bind:value="value"  v-on:input="$emit('input', $event.target.value)">
+                                    </div>
+                                    <div class="notunderlined">
+                                        <a v-if="visibility == 'password'">
+                                            <div icon-name="show password" >
+                                                <img @click="showPassword()" class="kleinoog" src="../assets/Images/klein_oog_uit.png"/>                      
+                                            </div>
+                                        </a>
 
-                                    <!-- shows the password -->
-                                    <a class="notunderlined" v-if="visibility == 'password'">
-                                        <div icon-name="show password" >
-                                            <img @click="showPassword()" class="kleinoogaan" src="../assets/Images/icon_eye_off.png"/>                      
-                                        </div>
-                                    </a>
-
-                                    <!-- hides the password -->
-                                    <a class="notunderlined" v-if="visibility == 'text'">
-                                        <div icon-name="hide password" >
-                                            <img @click="hidePassword()" class="kleinooguit" src="../assets/Images/icon_eye.png"/>                    
-                                        </div>
-                                    </a>
+                                        <!-- hides the password -->
+                                        <a v-if="visibility == 'text'">
+                                            <div icon-name="hide password" >
+                                                <img @click="hidePassword()" class="kleinoog" src="../assets/Images/klein_oog_aan.png"/>                    
+                                            </div>
+                                        </a>
+                                    </div>
                                 </div>
-                            </div>
+                            </div> 
                             <div>
                                 <nuxt-link to="/resetpassword" class="linktekst lg:w-2/12 sm:w-4/12 w-full">
                                     {{ item.wachtwoordVergeten }}
@@ -63,7 +65,6 @@
         </div>
     </div>
 </template>
-
 <script>
 
 import gql from 'graphql-tag';
@@ -103,7 +104,7 @@ export default {
                 await firebase.auth().signInWithEmailAndPassword(this.email, this.password);
                 this.$router.replace({name: "ingelogd"})
             }catch(err){
-                this.error = "Uw Email/Wachtwoord is onjuist"
+                this.error = err.message
             };
         }
     },

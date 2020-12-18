@@ -222,36 +222,12 @@ p {
   cursor: pointer;
 }
 
-.notunderlined {
-  margin-left: -25px;
-}
-
-.kleinoogaan {
-  width: 4%;
-  height: auto;
-  cursor: pointer;
-  @media only screen and (max-width: 768px) {
-    width: 8%;
-  }
-  @media only screen and (max-width: 375px) {
-    width: 50%;
-  }
-}
-
-.kleinooguit {
-  width: 6%;
-  height: auto;
-  cursor: pointer;
-  @media only screen and (max-width: 768px) {
-    width: 12%;
-  }
-  @media only screen and (max-width: 375px) {
-    width: 50%;
-  }
-}
-
 .linktekst {
   color: blue;
   cursor: pointer;
   text-decoration: underline;
+}
+
+.notunderlined>a {
+  cursor: pointer;
 }
