@@ -39,6 +39,90 @@
                         </p>
                     </div>
                 </div>
+                <div v-for="(data, i) in allAlleReserveringens" :key="i" class="md:w-10/12 w-full mx-auto md:mb-8 mb-4">
+                    <table class="lg:block hidden reserveringtable">
+                        <client-only>
+                            <div class="revall">
+                                <tr class="flex flex-col">
+                                    {{ data.tabel[0].lidnummer }}
+                                    <td v-for="(item, index) in lidnummers" :key="index" v-html="lidnummers[index]"></td>  
+                                </tr>
+                                <tr class="flex flex-col">
+                                    {{ data.tabel[0].baan }}
+                                    <td v-for="(item, index) in banen" :key="index" v-html="banen[index]"></td>  
+                                </tr>
+                                <tr class="flex flex-col">
+                                    {{ data.tabel[0].medespeler1 }}
+                                    <td v-for="(item, index) in medespeler1s" :key="index" v-html="medespeler1s[index]"></td>  
+                                </tr>
+                                <tr class="flex flex-col">
+                                    {{ data.tabel[0].medespeler2 }}
+                                    <td v-for="(item, index) in medespeler2s" :key="index" v-html="medespeler2s[index]"></td>  
+                                </tr>
+                                <tr class="flex flex-col">
+                                    {{ data.tabel[0].medespeler3 }}
+                                    <td v-for="(item, index) in medespeler3s" :key="index" v-html="medespeler3s[index]"></td>  
+                                </tr>
+                                <tr class="flex flex-col">
+                                    {{ data.tabel[0].datum }}
+                                    <td v-for="(item, index) in datums" :key="index" v-html="datums[index]"></td>  
+                                </tr>
+                                <tr class="flex flex-col">
+                                    {{ data.tabel[0].tijd }}
+                                    <td v-for="(item, index) in gekozentijden" :key="index" v-html="gekozentijden[index]"></td>  
+                                </tr>
+                            </div>
+                        </client-only>
+                    </table>
+                    <table class="lg:hidden block reserveringtable">
+                        <client-only>
+                            <div class="revall">
+                                <tr class="flex">
+                                    <div class="w-6/12">
+                                        {{ data.tabel[0].lidnummer }}
+                                    </div>
+                                    <td class="w-6/12" v-for="(item, index) in lidnummers" :key="index" v-html="lidnummers[index]"></td>  
+                                </tr>
+                                <tr class="flex">
+                                    <div class="w-6/12">
+                                        {{ data.tabel[0].baan }}
+                                    </div>
+                                    <td class="w-6/12" v-for="(item, index) in banen" :key="index" v-html="banen[index]"></td>  
+                                </tr>
+                                <tr class="flex">
+                                    <div class="w-6/12">
+                                        {{ data.tabel[0].medespeler1 }}
+                                    </div>
+                                    <td class="w-6/12" v-for="(item, index) in medespeler1s" :key="index" v-html="medespeler1s[index]"></td>  
+                                </tr>
+                                <tr class="flex">
+                                    <div class="w-6/12">
+                                        {{ data.tabel[0].medespeler2 }}
+                                    </div>
+                                    <td class="w-6/12" v-for="(item, index) in medespeler2s" :key="index" v-html="medespeler2s[index]"></td>  
+                                </tr>
+                                <tr class="flex">
+                                    <div class="w-6/12">
+                                        {{ data.tabel[0].medespeler3 }}
+                                    </div>
+                                    <td class="w-6/12" v-for="(item, index) in medespeler3s" :key="index" v-html="medespeler3s[index]"></td>  
+                                </tr>
+                                <tr class="flex">
+                                    <div class="w-6/12">
+                                        {{ data.tabel[0].datum }}
+                                    </div>
+                                    <td class="w-6/12" v-for="(item, index) in datums" :key="index" v-html="datums[index]"></td>  
+                                </tr>
+                                <tr class="flex">
+                                    <div class="w-6/12">
+                                        {{ data.tabel[0].tijd }}
+                                    </div>
+                                    <td class="w-6/12" v-for="(item, index) in gekozentijden" :key="index" v-html="gekozentijden[index]"></td>  
+                                </tr>
+                            </div>
+                        </client-only>
+                    </table>
+                </div>
                 <div class="md:w-10/12 w-full md:mx-auto">
                     <form @submit.prevent="reserveren">
                         <p>
@@ -89,58 +173,18 @@
                     </div>
                 </div>
             </div>
-            <div v-if="isAdmin" class="bg-blue-100">
-                <div class="container">
-                    <div class="md:py-32 py-8 md:w-10/12 w-full md:mx-auto flex flex-col">
-                        <div>
-                            <h1>
-                                {{ data.baanAfschermen[0].titel }}
-                            </h1>
-                            <p class="mt-4">
-                                {{ data.baanAfschermen[0].tekst }}
-                            </p>
-                        </div>
-                        <div class="mt-8">
-                            <form @submit.prevent="afschermen">
-                                <div class="flex md:items-center md:flex-row flex-col md:mt-0 mt-4">
-                                    <p class="md:w-2/12 w-full md:mb-0 mb-4">
-                                        {{ data.baan }}
-                                    </p>
-                                    <select required class="inputbox rounded" v-model="afschermbaan" name="banen" id="banen">
-                                        <option value="baan1">{{ data.baanEen }}</option>
-                                        <option value="baan2">{{ data.baanTwee }}</option>
-                                    </select>
-                                </div>
-                                <div class="flex md:items-center md:flex-row flex-col mt-4">
-                                    <p class="md:w-2/12 w-full md:mb-0 mb-4">
-                                        {{ data.datumtijdinput }}
-                                    </p>
-                                    <input class="rounded inputbox" type="date" id="today" v-model="afschermdatum" required />
-                                </div>
-                                <button class="downloadbtn my-8">
-                                    {{ data.baanAfschermen[0].afschermenKnop }}
-                                </button>
-                            </form>
-                            <div v-if="error2 || succesvol2">
-                                <p class="rodetekst">
-                                    {{ error2 }}
-                                </p>
-                                <p class="groenetekst">
-                                    {{ succesvol2 }}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </template>
 <script>
 import gql from 'graphql-tag';
 import firebase from 'firebase/app'
-import 'firebase/auth'
-import 'firebase/firestore'
+import 'firebase/auth';
+import 'firebase/storage';
+import 'firebase/database';
+import 'firebase/firestore';
+import 'firebase/messaging';
+import 'firebase/functions';
 
 export default {
 
@@ -159,14 +203,22 @@ export default {
             medespeler1: '-',
             medespeler2: '-',
             medespeler3: '-',
-            tijden: ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00'],
+            tijden: ['09:00-10:00', '10:00-11:00', '11:00-12:00', '12:00-13:00', '13:00-14:00', '14:00-15:00', '15:00-16:00', '16:00-17:00', '17:00-18:00', '18:00-19:00', '19:00-20:00', '20:00-21:00', '21:00-22:00', '22:00-23:00', '23:00-00:00'],
             gekozentijd: '',
             error: '',
             succesvol: '',
             afschermbaan: '',
             afschermdatum: '',
             error2 : '',
-            succesvol2: ''
+            succesvol2: '',
+            lidnummers: [],
+            banen: [],
+            medespeler1s: [],
+            medespeler2s: [],
+            medespeler3s: [],
+            datums: [],
+            gekozentijden: [],
+            timestampdate: ''
         }
     },
 
@@ -188,7 +240,9 @@ export default {
                 self.voornamen = data.Voornaam
                 self.achternamen = data.Achternaam
                 self.lidnummers = data.Lidnummer
-                medespelers.push(self.voornamen + " " + self.achternamen + " - " + self.lidnummers);
+                if(data.IsAdmin == false) {
+                    medespelers.push(self.voornamen + " " + self.achternamen + " - " + self.lidnummers);
+                }
                 if(data.Email == email) {
                     self.voornaam = data.Voornaam;
                     self.achternaam = data.Achternaam;
@@ -208,13 +262,22 @@ export default {
             const timestampyear = timestamp.toDate().getUTCFullYear()
 
             const timestamphours = timestamp.toDate().getUTCHours()
+            const timestamphourplus1 = timestamphours + 1
 
-            const timestampdate = timestampyear.toString() + "-" + timestampmonth.toString() + "-" + timestampday.toString()
-            const timestamptime = timestamphours.toString() + ":00"
+            var timestampdate = timestampyear.toString() + "-" + timestampmonth.toString() + "-" + timestampday.toString()
+            const timestamptime = timestamphours.toString() + ":00-" + timestamphourplus1.toString() + ":00"
 
             var email = self.email
             let datadatum = ""
             let datatijd = ""
+
+            const lidnummers = []
+            const banen = []
+            const medespeler1s = []
+            const medespeler2s = []
+            const medespeler3s = []
+            const datums = []
+            const gekozentijden = []
 
             snapshot.forEach(function(childSnapshot){
                 const data = childSnapshot.val()
@@ -222,9 +285,44 @@ export default {
                     datatijd = data.Tijd
                     datadatum = data.Datum
                 }
+                if(timestampmonth < 10) {
+                    timestampdate = timestampyear.toString() + "-" + "0" + timestampmonth.toString() + "-" + timestampday.toString()
+                } else {
+                    timestampdate = timestampyear.toString() + "-" + timestampmonth.toString() + "-" + timestampday.toString()
+                }
+                if(data.Lidnummer) {
+                    lidnummers.push(
+                        "<td>" + data.Lidnummer + "</td>"
+                    )
+                    banen.push(
+                        "<td>" + data.Baan + "</td>"
+                    )
+                    medespeler1s.push(
+                        "<td>" + data.Medespeler1 + "</td>"
+                    )
+                    medespeler2s.push(
+                        "<td>" + data.Medespeler2 + "</td>"
+                    )
+                    medespeler3s.push(
+                        "<td>" + data.Medespeler3 + "</td>"
+                    )
+                    datums.push(
+                        "<td>" + data.Datum + "</td>"
+                    )
+                    gekozentijden.push(
+                        "<td>" + data.Tijd + "</td>"
+                    )
+                }
             });
-            if(timestampdate >= datadatum) {
-                if(timestamptime == datatijd){
+            self.lidnummers = lidnummers; 
+            self.banen = banen; 
+            self.medespeler1s = medespeler1s; 
+            self.medespeler2s = medespeler2s; 
+            self.medespeler3s = medespeler3s; 
+            self.datums = datums; 
+            self.gekozentijden = gekozentijden;
+            if(datatijd != "") {
+                if(timestampdate > datadatum) {
                     const ref = firebase.database().ref('Reserveringen/')
                     const abcd = ref.orderByChild('Lidnummer').equalTo(self.lidnummer);
                     abcd.once('value', function(abcdSnap){
@@ -232,6 +330,18 @@ export default {
                         var b = Object.keys(a)[0];
                         ref.child(b).remove();
                     })
+                } else if(timestampdate == datadatum) {
+                    if(timestamptime > datatijd){
+                        const ref = firebase.database().ref('Reserveringen/')
+                        const abcd = ref.orderByChild('Lidnummer').equalTo(self.lidnummer);
+                        abcd.once('value', function(abcdSnap){
+                            var a = abcdSnap.val();
+                            var b = Object.keys(a)[0];
+                            ref.child(b).remove();
+                        })
+                    }
+                } else {
+                    return
                 }
             }
         });
@@ -243,55 +353,23 @@ export default {
         this.setTimer();
     },
 
-    methods: { 
-
-        afschermen: function() {
-            const reserveringref = firebase.database().ref('Reserveringen/')
-            reserveringref.once('value', function(snapshot){
-                const afschermbaan = self.afschermbaan
-                const afschermdatum = self.afschermdatum
-
-                let dataafschermbaan  = ''
-                let dataafschermdatum  = ''
-                let error2 = self.error2
-                let succesvol2 = self.succesvol2
-                snapshot.forEach(function(childSnapshot){
-                    const data = childSnapshot.val()
-
-                    if(afschermbaan == data.Afschermbaan) {
-                        dataafschermbaan = data.Afschermbaan
-                    }
-                    if(afschermdatum == data.Afschermdatum) {
-                        dataafschermdatum = data.Afschermdatum
-                    }
-
-                });
-                if(afschermbaan == dataafschermbaan) {
-                    if(afschermdatum == dataafschermdatum) {
-                        self.error2 = "Deze baan is al afgeschermd voor deze datum"
-                        self.succesvol2 = ""
-                    } else {
-                        self.error2 = ""
-                        self.succesvol2 = "Deze baan is afgeschermd voor deze datum. Let op dat er geen spelers zijn die hebben gereserveerd voor deze baan op deze datum."
-                        reserveringref.push({
-                            Afschermdatum: afschermdatum,
-                            Afschermbaan: afschermbaan
-                        })
-                    }
-                } else {
-                    self.error2 = ""
-                    self.succesvol2 = "Deze baan is afgeschermd voor deze datum. Let op dat er geen spelers zijn die hebben gereserveerd voor deze baan op deze datum."
-                    reserveringref.push({
-                        Afschermdatum: afschermdatum,
-                        Afschermbaan: afschermbaan
-                    })
-                }
-            });
-        },
+    methods: {
 
         reserveren: function() {
             const reserveringref = firebase.database().ref('Reserveringen/')
             reserveringref.once('value', function(snapshot){
+
+                const timestamp = firebase.firestore.Timestamp.fromDate(new Date());
+                const timestampday = timestamp.toDate().getUTCDate()
+                const timestampmonth = timestamp.toDate().getUTCMonth() + 1
+                const timestampyear = timestamp.toDate().getUTCFullYear()
+                var timestampdate = self.timestampdate
+
+                const timestamphours = timestamp.toDate().getUTCHours()
+                const timestamphourplus1 = timestamphours + 1
+
+                const timestamptime = timestamphours.toString() + ":00-" + timestamphourplus1.toString() + ":00" 
+
                 //get filled in data
                 const email = self.email
                 const lidnummer = self.lidnummer
@@ -316,11 +394,30 @@ export default {
                 let error = self.error
                 let dataafschermbaan = ""
                 let dataafschermdatum = ""
+                let datareserveerdatum = ""
+                let datareserveertijd = ""
 
                 snapshot.forEach(function(childSnapshot){
                     const data = childSnapshot.val()
                     if (self.lidnummer == data.Lidnummer) {
                         datanummer = data.Lidnummer
+                        datareserveerdatum = data.Datum
+                        datareserveertijd = data.Tijd
+                    }
+                    if(data.Medespeler1 == voornaam + " " + achternaam + " - " + self.lidnummer) {
+                        datanummer = data.Medespeler1
+                        datareserveerdatum = data.Datum
+                        datareserveertijd = data.Tijd
+                    }
+                    if(data.Medespeler2 == voornaam + " " + achternaam + " - " + self.lidnummer) {
+                        datanummer = data.Medespeler2
+                        datareserveerdatum = data.Datum
+                        datareserveertijd = data.Tijd
+                    }
+                    if(data.Medespeler3 == voornaam + " " + achternaam + " - " + self.lidnummer) {
+                        datanummer = data.Medespeler3
+                        datareserveerdatum = data.Datum
+                        datareserveertijd = data.Tijd
                     }
                     if(self.medespeler1 == data.Voornaam + " " + data.Achternaam + " - " + data.Lidnummer) {
                         dataspelernummer = self.medespeler1
@@ -333,9 +430,6 @@ export default {
                     }
                     if(self.voornaam + " " + self.achternaam + " - " + data.Lidnummer == data.Lidnummer) {
                         dataspelernummer = self.voornaam + " " + self.achternaam + " - " + data.Lidnummer
-                    }
-                    if(self.court == data.Baan) {
-                        databaan = data.Baan
                     }
                     if(self.medespeler1 == data.Medespeler1) {
                         datamedespeler1 = data.Medespeler1
@@ -364,6 +458,9 @@ export default {
                     if(self.medespeler3 == data.Medespeler3) {
                         datamedespeler3 = data.Medespeler3
                     }
+                    if(self.court == data.Baan) {
+                        databaan = data.Baan
+                    }
                     if(self.datum == data.Datum) {
                         datadatum = data.Datum
                         if(self.gekozentijd == data.Tijd) {
@@ -376,14 +473,45 @@ export default {
                     if(self.datum == data.Afschermdatum) {
                         dataafschermdatum = data.Afschermdatum
                     }
+                    if(timestampmonth < 10) {
+                        timestampdate = timestampyear.toString() + "-" + "0" + timestampmonth.toString() + "-" + timestampday.toString()
+                    } else {
+                        timestampdate = timestampyear.toString() + "-" + timestampmonth.toString() + "-" + timestampday.toString()
+                    }
                 });
+                if(self.isAdmin == true) {
+                    self.error = ""
+                    self.succesvol = "Reservering succesvol aangemaakt, u tennist op " + datum + " om " + tijd + " samen met " + medespeler1 + ", " + medespeler2 + " en " + medespeler3
+                    reserveringref.push({
+                        Lidnummer: lidnummer,
+                        Baan: court,
+                        Medespeler1: medespeler1,
+                        Medespeler2: medespeler2,
+                        Medespeler3: medespeler3,
+                        Datum: datum,
+                        Tijd: tijd,
+                        Email: email,
+                        Voornaam: voornaam,
+                        Achternaam: achternaam
+                    })
+
+                } else {
                 if(dataafschermbaan) {
                     if(dataafschermdatum) {
                         self.error = "Deze baan is op deze datum afgeschermd."
                     } else {
                         if(datanummer) {
-                            self.error = "U heeft al een reservering in ons systeem staan."
-                        } else if(dataspelernummer) {
+                            self.error = "U heeft al een reservering in ons systeem staan, u kunt weer reserveren vanaf: " + datareserveerdatum + " " + datareserveertijd
+                        }
+                        if(timestampdate > datum){
+                            self.error = "U kunt niet in het verleden reserveren."
+                            return
+                        } 
+                        if(timestampdate == datum && timestamptime >= tijd) {
+                            self.error = "U kunt niet in het verleden reserveren."
+                            return
+                        }
+                        if(dataspelernummer) {
                             self.error = dataspelernummer + " heeft al een reservering in ons systeem staan"
                         } else if(medespeler1 == datamedespeler1) {
                             if(datamedespeler1 == "" || datamedespeler1 == "-") {
@@ -1116,9 +1244,20 @@ export default {
                         }
                     }
                 } else {
-                    if(lidnummer == datanummer) {
-                            self.error = "U heeft al een reservering in ons systeem staan."
+                    if(datanummer) {
+                        self.error = "U heeft al een reservering in ons systeem staan, u kunt weer reserveren vanaf: " + datareserveerdatum + " " + datareserveertijd
+                    }
+                    if(timestampdate > datum){
+                            self.error = "U kunt niet in het verleden reserveren."
+                            return
+                        } 
+                        if(timestampdate == datum && timestamptime >= tijd) {
+                            self.error = "U kunt niet in het verleden reserveren."
+                            return
                         }
+                    if(dataspelernummer) {
+                        self.error = dataspelernummer + " heeft al een reservering in ons systeem staan"
+                    }
                         else if(medespeler1 == datamedespeler1) {
                             if(datamedespeler1 == "" || datamedespeler1 == "-") {
                                 if(court == databaan) {
@@ -1848,6 +1987,7 @@ export default {
                                 Achternaam: achternaam
                             })
                         }
+                    }
                 }
             })
         },
@@ -1881,10 +2021,20 @@ export default {
                 allreserveringen
                 mijnreserveringen
                 gebruikerToevoegen
-                baanAfschermen {
-                    titel
-                    tekst
-                    afschermenKnop
+            }
+        }`,
+        allAlleReserveringens: gql`{
+            allAlleReserveringens {
+                titel
+                tekst
+                tabel {
+                    lidnummer
+                    baan
+                    medespeler1
+                    medespeler2
+                    medespeler3
+                    datum
+                    tijd
                 }
             }
         }`

@@ -8,107 +8,75 @@
                             {{ reglement.titelpagina }}
                         </h1>
                     </div>
-                    <div v-if="reglement.contentmatrix[0].afbeeldingnaasttekst" class="flex items-center mx-auto md:w-10/12 w-full md:py-32 py-8">
-                        <div class="md:w-6/12 w-full md:mr-4">
+                    <div class="flex items-center mx-auto md:w-10/12 w-full md:py-32 py-8">
+                        <div class="w-full md:mr-4">
                             <h2>
                                 {{ reglement.contentmatrix[0].titel }}
                             </h2>
                             <p class="leading-7 mt-4">
-                                {{ reglement.contentmatrix[0].tekst }}
+                                {{ reglement.contentmatrix[0].ondertitel }}
                             </p>
-                        </div>
-                        <div class="w-6/12">
-                            <img class="w-10/12" :src="reglement.contentmatrix[0].afbeeldingnaasttekst.url">
-                        </div>
-                    </div>
-                    <div v-else class="flex items-center mx-auto md:w-10/12 w-full md:py-32 py-8">
-                        <div class="w-full mr-4">
-                            <h2>
-                                {{ reglement.contentmatrix[0].titel }}
-                            </h2>
                             <p class="leading-7 mt-4">
-                                {{ reglement.contentmatrix[0].tekst }}
+                                {{ reglement.contentmatrix[0].paragraaf1titel }}
+                            </p>
+                            <p class="leading-7">
+                                {{ reglement.contentmatrix[0].paragraaf1 }}
+                            </p>
+                             <p class="leading-7 mt-4">
+                                {{ reglement.contentmatrix[0].paragraaf2titel }}
+                            </p>
+                            <p class="leading-7">
+                                {{ reglement.contentmatrix[0].paragraaf2 }}
+                            </p>
+                             <p class="leading-7 mt-4">
+                                {{ reglement.contentmatrix[0].paragraaf3titel }}
+                            </p>
+                            <p class="leading-7">
+                                {{ reglement.contentmatrix[0].paragraaf3 }}
+                            </p>
+                             <p class="leading-7 mt-4">
+                                {{ reglement.contentmatrix[0].paragraaf4titel }}
+                            </p>
+                            <p class="leading-7">
+                                {{ reglement.contentmatrix[0].paragraaf4 }}
+                            </p>
+                             <p class="leading-7 mt-4">
+                                {{ reglement.contentmatrix[0].paragraaf5titel }}
+                            </p>
+                            <p class="leading-7">
+                                {{ reglement.contentmatrix[0].paragraaf5 }}
+                            </p>
+                             <p class="leading-7 mt-4">
+                                {{ reglement.contentmatrix[0].paragraaf6titel }}
+                            </p>
+                            <p class="leading-7">
+                                {{ reglement.contentmatrix[0].paragraaf6 }}
+                            </p>
+                             <p class="leading-7 mt-4">
+                                {{ reglement.contentmatrix[0].paragraaf7titel }}
+                            </p>
+                            <p class="leading-7">
+                                {{ reglement.contentmatrix[0].paragraaf7 }}
+                            </p>
+                             <p class="leading-7 mt-4">
+                                {{ reglement.contentmatrix[0].paragraaf8titel }}
+                            </p>
+                            <p class="leading-7">
+                                {{ reglement.contentmatrix[0].paragraaf8 }}
+                            </p>
+                             <p class="leading-7 mt-4">
+                                {{ reglement.contentmatrix[0].paragraaf9titel }}
+                            </p>
+                            <p class="leading-7">
+                                {{ reglement.contentmatrix[0].paragraaf9 }}
+                            </p>
+                             <p class="leading-7 mt-4">
+                                {{ reglement.contentmatrix[0].paragraaf10titel }}
+                            </p>
+                            <p class="leading-7">
+                                {{ reglement.contentmatrix[0].paragraaf10 }}
                             </p>
                         </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="container mx-auto">
-                <div v-if="reglement.contentmatrix[1].afbeeldingnaasttekst" class="flex items-center mx-auto w-10/12 py-32">
-                    <div class="w-6/12 mr-4">
-                        <img :src="reglement.contentmatrix[1].afbeeldingnaasttekst.url">   
-                    </div>
-                    <div class="w-6/12">
-                        <h2>
-                            {{ reglement.contentmatrix[1].titel }}
-                        </h2>
-                        <p class="leading-7 mt-4 w-10/12">
-                            {{ reglement.contentmatrix[1].tekst }}
-                        </p>
-                    </div>
-                </div>
-                <div v-else class="flex items-center mx-auto md:w-10/12 w-full md:py-32 py-8">
-                    <div class="w-full">
-                        <h2>
-                            {{ reglement.contentmatrix[1].titel }}
-                        </h2>
-                        <p class="leading-7 mt-4 md:w-10/12 w-full">
-                            {{ reglement.contentmatrix[1].tekst }}
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="bg-blue-100 shadow-lg">
-                <div class="container mx-auto">
-                    <div v-if="reglement.contentmatrix[2].afbeeldingnaasttekst" class="flex items-center mx-auto w-10/12 py-32">
-                        <div class="w-6/12 mr-4">
-                            <h2>
-                                {{ reglement.contentmatrix[2].titel }}
-                            </h2>
-                            <p class="leading-7 mt-4">
-                                {{ reglement.contentmatrix[2].tekst }}
-                            </p>
-                        </div>
-                        <div class="w-6/12">
-                            <img class="w-10/12" :src="reglement.contentmatrix[2].afbeeldingnaasttekst.url">
-                        </div>
-                    </div>
-                    <div v-else class="flex items-center mx-auto md:w-10/12 w-full md:py-32 py-8">
-                        <div class="w-full mr-4">
-                            <h2>
-                                {{ reglement.contentmatrix[2].titel }}
-                            </h2>
-                            <p class="leading-7 mt-4">
-                                {{ reglement.contentmatrix[2].tekst }}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="container mx-auto">
-                <div v-if="reglement.contentmatrix[3].afbeeldingnaasttekst" class="flex items-center mx-auto w-10/12 py-32">
-                    <div class="w-6/12 mr-4">
-                        <img :src="reglement.contentmatrix[3].afbeeldingnaasttekst.url">   
-                    </div>
-                    <div class="w-6/12">
-                        <h2>
-                            {{ reglement.contentmatrix[3].titel }}
-                        </h2>
-                        <p class="leading-7 mt-4 w-10/12">
-                            {{ reglement.contentmatrix[3].tekst }}
-                        </p>
-                    </div>
-                </div>
-                <div v-else class="flex items-center mx-auto md:w-10/12 w-full md:py-32 py-8">
-                    <div class="w-full">
-                        <h2>
-                            {{ reglement.contentmatrix[3].titel }}
-                        </h2>
-                        <p class="leading-7 mt-4 md:w-10/12 w-full">
-                            {{ reglement.contentmatrix[3].tekst }}
-                        </p>
                     </div>
                 </div>
             </div>
@@ -126,7 +94,27 @@ export default {
                 titelpagina
                 contentmatrix {
                     titel
-                    tekst
+                    ondertitel
+                    paragraaf1titel
+                    paragraaf1
+                    paragraaf2titel
+                    paragraaf2
+                    paragraaf3titel
+                    paragraaf3
+                    paragraaf4titel
+                    paragraaf4
+                    paragraaf5titel
+                    paragraaf5
+                    paragraaf6titel
+                    paragraaf6
+                    paragraaf7titel
+                    paragraaf7
+                    paragraaf8titel
+                    paragraaf8
+                    paragraaf9titel
+                    paragraaf9
+                    paragraaf10titel
+                    paragraaf10
                 }
             }
         }`

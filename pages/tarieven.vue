@@ -84,7 +84,7 @@
                         <p>
                             {{ tarieven.ondertekst }}
                         </p>
-                        <a class="downloadbtn mt-4" href="http://www.debonkelaertennis.nl/Inschrijfformulier_TCLievelde2020.doc">
+                        <a class="downloadbtn mt-4" @click="downloadWithAxios(title, src)">
                             {{ tarieven.downloadKnop }}
                         </a>
                     </div>
@@ -97,8 +97,39 @@
 <script>
 
 import gql from 'graphql-tag';
+import axios from 'axios'
 
 export default {
+
+    data() {
+        return {
+            title: 'Inschrijfformulier_TClievelde2021.docx',
+            src: 'Inschrijfformulier_TClievelde2021.docx'
+        }
+  },
+
+    methods: {
+    forceFileDownload(response, title) {
+      console.log(title)
+      const url = window.URL.createObjectURL(new Blob([response.data]))
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute('download', title)
+      document.body.appendChild(link)
+      link.click()
+    },
+    downloadWithAxios(url, title) {
+      axios({
+        method: 'get',
+        url,
+        responseType: 'arraybuffer',
+      })
+        .then((response) => {
+          this.forceFileDownload(response, title)
+        })
+        .catch((err) => console.log(err))
+    },
+  },
 
     apollo: {
         allTarievens: gql`{

@@ -168,7 +168,6 @@ export default {
       allActueels {
         contentmatrix {
           titel
-          tekst
         }
       }
     }`,
@@ -209,7 +208,6 @@ export default {
       allReglements {
         contentmatrix {
           titel
-          tekst
         }
       }
     }`,

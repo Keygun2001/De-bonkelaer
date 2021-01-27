@@ -118,7 +118,7 @@
                         </tr>
                     </table>
                 </div>
-                <div v-if="medespeler1">
+                <div v-if="geenmedespeler">
                     <div class="lg:py-0 py-8 lg:block flex justify-center w-10/12 mx-auto" v-if="aanpassen == false">
                             <button @click="aanpassen = !aanpassen" class="downloadbtn">{{ reservering.aanpassenKnop }}</button>
                         </div>
@@ -166,13 +166,14 @@ export default {
             medespeler2: '',
             medespeler3: '',
             medespelers: [],
-            tijden: ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00'],
+            tijden: ['09:00-10:00', '10:00-11:00', '11:00-12:00', '12:00-13:00', '13:00-14:00', '14:00-15:00', '15:00-16:00', '16:00-17:00', '17:00-18:00', '18:00-19:00', '19:00-20:00', '20:00-21:00', '21:00-22:00', '22:00-23:00', '23:00-00:00'],
             datum: '',
             tijd: '',
             error: '',
             succesvol: '',
             voornaam: '',
-            achternaam: ''
+            achternaam: '',
+            geenmedespeler: false
         }
     },
 
@@ -219,6 +220,7 @@ export default {
             const error = ''
             const voornaam = ''
             const achternaam = ''
+            const geenmedespeler = false
             
 
             snapshot.forEach(function(childSnapShot){
@@ -232,6 +234,7 @@ export default {
                     self.baan = data.Baan
                     self.voornaam = data.Voornaam
                     self.achternaam = data.Achternaam
+                    self.geenmedespeler = true
                 }
                 if(data.Medespeler1 == self.voornaam + " " + self.achternaam + " - " + self.lidnummer) {
                     self.lidnummer = data.Lidnummer
@@ -301,6 +304,8 @@ export default {
                 const medespeler3 = self.medespeler3
                 const datum = self.datum
                 const tijd = self.tijd
+                const voornaam = self.voornaam
+                const achternaam = self.achternaam
 
                 //get database data
                 let databaan = ''
@@ -321,6 +326,7 @@ export default {
                 let dataafschermdatum = ''
                 let dataspelernummer = ''
                 let dataafschermbaan = ''
+                let datanummer = ''
 
                 snapshot.forEach(function(childSnapshot){
                     const data = childSnapshot.val()
@@ -331,6 +337,15 @@ export default {
                             databaan = data.Baan
                         }
                     }
+                     if(data.Medespeler1 == voornaam + " " + achternaam + " - " + self.lidnummer) {
+                        datanummer = data.Medespeler1
+                    }
+                    if(data.Medespeler2 == voornaam + " " + achternaam + " - " + self.lidnummer) {
+                        datanummer = data.Medespeler2
+                    }
+                    if(data.Medespeler3 == voornaam + " " + achternaam + " - " + self.lidnummer) {
+                        datanummer = data.Medespeler3
+                    } 
                     if(self.medespeler1 == data.Voornaam + " " + data.Achternaam + " - " + data.Lidnummer) {
                         dataspelernummer = self.medespeler1
                     }
@@ -430,6 +445,9 @@ export default {
                         self.dataemail = data.Email
                     }
                     if(self.email == data.Email) {
+                        if(datanummer) {
+                            self.error = datanummer + " heeft al een reservering in ons systeem."
+                        }
                         if(dataafschermbaan) {
                             if(dataafschermdatum) {
                                 self.error = "Deze baan is op deze datum afgeschermd."
@@ -463,7 +481,9 @@ export default {
                                                 Medespeler3: medespeler3,
                                                 Datum: datum,
                                                 Tijd: tijd,
-                                                Email: email
+                                                Email: email,
+                                                Voornaam: voornaam,
+                                                Achternaam: achternaam
                                             })
                                             self.error = ""
                                             self.succesvol = "Reservering succesvol aangepast!"
@@ -484,7 +504,9 @@ export default {
                                                 Medespeler3: medespeler3,
                                                 Datum: datum,
                                                 Tijd: tijd,
-                                                Email: email
+                                                Email: email,
+                                                Voornaam: voornaam,
+                                                Achternaam: achternaam
                                             })
                                             self.error = ""
                                             self.succesvol = "Reservering succesvol aangepast!"
@@ -505,7 +527,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                                Voornaam: voornaam,
+                                                Achternaam: achternaam
                                     })
                                     self.error = ""
                                     self.succesvol = "Reservering succesvol aangepast!"
@@ -541,10 +565,12 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                                Voornaam: voornaam,
+                                                Achternaam: achternaam
                                     })
                                     self.error = ""
-                                            self.succesvol = "Reservering succesvol aangepast!"
+                                    self.succesvol = "Reservering succesvol aangepast!"
                                 }
                             } else {
                                 self.aanpassen = false
@@ -563,10 +589,12 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                                Voornaam: voornaam,
+                                                Achternaam: achternaam
                                     })
                                     self.error = ""
-                                            self.succesvol = "Reservering succesvol aangepast!"
+                                    self.succesvol = "Reservering succesvol aangepast!"
                             }
                         } else{
                             self.aanpassen = false
@@ -585,10 +613,12 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                                Voornaam: voornaam,
+                                                Achternaam: achternaam
                                     })
                                     self.error = ""
-                                            self.succesvol = "Reservering succesvol aangepast!"
+                                    self.succesvol = "Reservering succesvol aangepast!"
                         }
                         } else {
                             self.error = medespeler1 + " heeft al een reservering in ons systeem staan"
@@ -620,7 +650,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                                Voornaam: voornaam,
+                                                Achternaam: achternaam
                                     })
                                     self.error = ""
                                             self.succesvol = "Reservering succesvol aangepast!"
@@ -642,7 +674,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                                Voornaam: voornaam,
+                                                Achternaam: achternaam
                                     })
                                     self.error = ""
                                             self.succesvol = "Reservering succesvol aangepast!"
@@ -664,10 +698,12 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                                Voornaam: voornaam,
+                                                Achternaam: achternaam
                                     })
                                     self.error = ""
-                                            self.succesvol = "Reservering succesvol aangepast!"
+                                    self.succesvol = "Reservering succesvol aangepast!"
                         }
                         } else {
                             self.error = medespeler1 + " heeft al een reservering in ons systeem staan"
@@ -702,7 +738,9 @@ export default {
                                             Medespeler3: medespeler3,
                                             Datum: datum,
                                             Tijd: tijd,
-                                            Email: email
+                                            Email: email,
+                                                Voornaam: voornaam,
+                                                Achternaam: achternaam
                                         })
                                         self.error = ""
                                                 self.succesvol = "Reservering succesvol aangepast!"
@@ -724,7 +762,9 @@ export default {
                                             Medespeler3: medespeler3,
                                             Datum: datum,
                                             Tijd: tijd,
-                                            Email: email
+                                            Email: email,
+                                                Voornaam: voornaam,
+                                                Achternaam: achternaam
                                         })
                                         self.error = ""
                                                 self.succesvol = "Reservering succesvol aangepast!"
@@ -746,7 +786,9 @@ export default {
                                             Medespeler3: medespeler3,
                                             Datum: datum,
                                             Tijd: tijd,
-                                            Email: email
+                                            Email: email,
+                                                Voornaam: voornaam,
+                                                Achternaam: achternaam
                                         })
                                         self.error = ""
                                         self.succesvol = "Reservering succesvol aangepast!"
@@ -785,7 +827,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                                Voornaam: voornaam,
+                                                Achternaam: achternaam
                                     })
                                     self.error = ""
                                             self.succesvol = "Reservering succesvol aangepast!"
@@ -807,7 +851,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                                Voornaam: voornaam,
+                                                Achternaam: achternaam
                                     })
                                     self.error = ""
                                             self.succesvol = "Reservering succesvol aangepast!"
@@ -849,7 +895,9 @@ export default {
                                             Medespeler3: medespeler3,
                                             Datum: datum,
                                             Tijd: tijd,
-                                            Email: email
+                                            Email: email,
+                                                Voornaam: voornaam,
+                                                Achternaam: achternaam
                                         })
                                         self.error = ""
                                         self.succesvol = "Reservering succesvol aangepast!"
@@ -871,7 +919,9 @@ export default {
                                             Medespeler3: medespeler3,
                                             Datum: datum,
                                             Tijd: tijd,
-                                            Email: email
+                                            Email: email,
+                                                Voornaam: voornaam,
+                                                Achternaam: achternaam
                                         })
                                         self.error = ""
                                         self.succesvol = "Reservering succesvol aangepast!"
@@ -893,7 +943,9 @@ export default {
                                             Medespeler3: medespeler3,
                                             Datum: datum,
                                             Tijd: tijd,
-                                            Email: email
+                                            Email: email,
+                                                Voornaam: voornaam,
+                                                Achternaam: achternaam
                                         })
                                         self.error = ""
                                                 self.succesvol = "Reservering succesvol aangepast!"
@@ -928,7 +980,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                                Voornaam: voornaam,
+                                                Achternaam: achternaam
                                     })
                                     self.error = ""
                                             self.succesvol = "Reservering succesvol aangepast1!"
@@ -950,7 +1004,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                                Voornaam: voornaam,
+                                                Achternaam: achternaam
                                     })
                                     self.error = ""
                                             self.succesvol = "Reservering succesvol aangepast!"
@@ -972,7 +1028,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                                Voornaam: voornaam,
+                                                Achternaam: achternaam
                                     })
                                     self.error = ""
                                             self.succesvol = "Reservering succesvol aangepast!"
@@ -1007,7 +1065,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                                Voornaam: voornaam,
+                                                Achternaam: achternaam
                                     })
                                     self.error = ""
                                             self.succesvol = "Reservering succesvol aangepast!"
@@ -1029,7 +1089,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                                Voornaam: voornaam,
+                                                Achternaam: achternaam
                                     })
                                     self.error = ""
                                             self.succesvol = "Reservering succesvol aangepast!"
@@ -1051,7 +1113,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                                Voornaam: voornaam,
+                                                Achternaam: achternaam
                                     })
                                     self.error = ""
                                             self.succesvol = "Reservering succesvol aangepast!"
@@ -1086,7 +1150,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                        Voornaam: voornaam,
+                                        Achternaam: achternaam
                                     })
                                     self.error = ""
                                             self.succesvol = "Reservering succesvol aangepast!"
@@ -1108,7 +1174,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                        Voornaam: voornaam,
+                                        Achternaam: achternaam
                                     })
                                     self.error = ""
                                     self.succesvol = "Reservering succesvol aangepast!"
@@ -1129,7 +1197,9 @@ export default {
                                         Medespeler3: medespeler3,
                                         Datum: datum,
                                         Tijd: tijd,
-                                        Email: email
+                                        Email: email,
+                                        Voornaam: voornaam,
+                                        Achternaam: achternaam
                                     })
                                     self.error = ""
                                             self.succesvol = "Reservering succesvol aangepast!"
@@ -1138,8 +1208,6 @@ export default {
                             self.error = medespeler3 + " heeft al een reservering in ons systeem staan"
                         }
                     }
-                } else if(self.email != data.Email) {
-                    self.error = "Sorry het is niet mogelijk een reservering aan te passen die u niet gemaakt hebt. Het verwijderen ervan is wel mogelijk."
                 }
             });
         });
