@@ -45,7 +45,16 @@
                     </div>
                 </div>
                 <div v-for="(footer, index) in footer" :key="index" class="flex mt-2 justify-center"> 
-                    <p class="nuxtfooterlink text-xs">
+                    <NuxtLink to="/disclaimer" class="nuxtfooterlink text-xs mx-2">
+                        {{ footer[0].disclaimer }}
+                    </NuxtLink>
+                    <NuxtLink to="/privacybeleid" class="nuxtfooterlink text-xs mx-2">
+                        {{ footer[0].privacyBeleid }}
+                    </NuxtLink>
+                    <NuxtLink to="/bestuur" class="nuxtfooterlink text-xs mx-2">
+                        {{ footer[0].bestuur }}
+                    </NuxtLink>
+                    <p class="nuxtfooterlink text-xs mx-2">
                         {{ footer[0].copyright }}
                     </p>
                 </div>
@@ -79,6 +88,9 @@ export default {
                 }
                 copyright {
                     copyright
+                    disclaimer
+                    privacyBeleid
+                    bestuur
                 }
             }
         }`,
