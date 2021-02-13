@@ -7,7 +7,8 @@
     "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate",
-    "build-css": "tailwindcss build assets/css/styles.css -o static/styles.css"
+    "build-css": "tailwindcss build assets/css/styles.css -o static/styles.css",
+    "build-fragment": "node queries/schemaQuery.js"
   },
   "dependencies": {
     "@nuxtjs/apollo": "^4.0.1-rc.4",
@@ -24,6 +25,7 @@
     "nuxt": "^2.14.6",
     "nuxt-stylus-resources-loader": "^2.0.0",
     "pcss": "^1.0.0",
+    "swiper": "^6.4.11",
     "tailwindcss": "^1.9.6",
     "vue-axios": "^3.2.0",
     "vue-carousel": "^0.18.0",

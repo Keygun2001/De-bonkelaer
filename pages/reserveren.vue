@@ -37,8 +37,6 @@
                                                 <img @click="showPassword()" class="kleinoog" src="../assets/Images/klein_oog_uit.png"/>                      
                                             </div>
                                         </a>
-
-                                        <!-- hides the password -->
                                         <a v-if="visibility == 'text'">
                                             <div icon-name="hide password" >
                                                 <img @click="hidePassword()" class="kleinoog" src="../assets/Images/klein_oog_aan.png"/>                    

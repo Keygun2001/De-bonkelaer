@@ -12,12 +12,12 @@
                     <ul class="flex menu">
                         <li class="menu--list">
                             <NuxtLink to="/" v-for="(home, index) in allHomepaginas" :key="index">
-                                {{ home.contentmatrix[0].titel }}
+                                {{ home.titel }}
                             </NuxtLink>
                         </li>
                         <li class="menu--list">
                             <NuxtLink to='/actueel' v-for="(actueel, index) in allActueels" :key="index">
-                                {{ actueel.contentmatrix[0].titel }}
+                                {{ actueel.titel }}
                             </NuxtLink>
                         </li>
                         <li class="menu--list">
@@ -27,17 +27,17 @@
                         </li>
                         <li class="menu--list">
                             <NuxtLink to='/reserveren' v-for="(reserveren, index) in allReserverens" :key="index">
-                                {{ reserveren.contentmatrix[0].titel }}
+                                {{ reserveren.titel }}
                             </NuxtLink>
                         </li>
                         <li class="menu--list">
                             <NuxtLink to='/reglement' v-for="(reglementen, index) in allReglements" :key="index">
-                                {{ reglementen.contentmatrix[0].titel }}
+                                {{ reglementen.titel }}
                             </NuxtLink>
                         </li>
                         <li class="menu--list">
                             <NuxtLink to='/impressies' v-for="(impressies, index) in allImpressies" :key="index">
-                                {{ impressies.contentmatrix[0].titel }}
+                                {{ impressies.titel }}
                             </NuxtLink>
                         </li>
                     </ul>
@@ -71,12 +71,12 @@
                 </h2>
                 <li class="mobile">
                   <NuxtLink @click.native="showNav = !showNav" class="mobilelink" to="/" v-for="(home, index) in allHomepaginas" :key="index">
-                    {{ home.contentmatrix[0].titel }}
+                    {{ home.titel }}
                   </NuxtLink>
                 </li>
                 <li class="mobile">
                   <NuxtLink  @click.native="showNav = !showNav" class="mobilelink" to='/actueel' v-for="(actueel, index) in allActueels" :key="index">
-                    {{ actueel.contentmatrix[0].titel }}
+                    {{ actueel.titel }}
                   </NuxtLink>
                 </li>
                 <li class="mobile">
@@ -86,17 +86,17 @@
                 </li>
                 <li class="mobile">
                   <NuxtLink  @click.native="showNav = !showNav" class="mobilelink" to='/reserveren' v-for="(reserveren, index) in allReserverens" :key="index">
-                    {{ reserveren.contentmatrix[0].titel }}
+                    {{ reserveren.titel }}
                   </NuxtLink>
                 </li>
                 <li class="mobile">
                   <NuxtLink  @click.native="showNav = !showNav" class="mobilelink" to='/reglement' v-for="(reglementen, index) in allReglements" :key="index">
-                    {{ reglementen.contentmatrix[0].titel }}
+                    {{ reglementen.titel }}
                   </NuxtLink>
                 </li>
                 <li class="mobile">
                   <NuxtLink  @click.native="showNav = !showNav" class="mobilelink" to='/impressies' v-for="(impressies, index) in allImpressies" :key="index">
-                    {{ impressies.contentmatrix[0].titel }}
+                    {{ impressies.titel }}
                   </NuxtLink>
                 </li>
               </ul>
@@ -153,10 +153,7 @@ export default {
     apollo: {
     allHomepaginas: gql`{
       allHomepaginas {
-        contentmatrix {
-          titel
-          tekst
-        }
+        titel
       }
     }`,
     allMenus: gql`{
@@ -166,68 +163,35 @@ export default {
     }`,
     allActueels: gql`{
       allActueels {
-        contentmatrix {
-          titel
-        }
+        titel
       }
     }`,
     allTarievens: gql`{
       allTarievens {
         titel
-        seizoen
-        prijzen {
-          senioren
-          seniorenPrijs
-          tot17
-          tot17Prijs
-          jongerDan15
-          jongerDan15Prijs
-          zomerarrangement
-          persoon1Exclusief
-          persoon1ExclusiefPrijs
-          persoon1Inclusief
-          persoon1InclusiefPrijs
-          personen2Exclusief
-          personen2ExclusiefPrijs
-          personen2Inclusief
-          personen2InclusiefPrijs
-        }
-        ondertekst
-        downloadKnop
       }
     }`,
     allImpressies: gql`{
       allImpressies {
-        contentmatrix {
-          titel
-          tekst
-        }
+        titel
       }
     }`,
     allReglements: gql`{
       allReglements {
-        contentmatrix {
-          titel
-        }
+        titel
       }
     }`,
     allReserverens: gql`{
       allReserverens {
         navbarButton
-        contentmatrix {
-          titel
-          tekst
-        }
+        titel
       }
     }`,
     allIngelogds: gql`{
       allIngelogds {
-          titeltekst {
-              titel
-              tekst
-          }
-          uitloggenKnop
-        }
+        titel
+        uitloggenKnop
+      }
     }`
   },
 }

@@ -1,24 +1,19 @@
 <template>
     <div>
-        <div v-for="(impressie, index) in allImpressies" :key="index">
+        <div v-for="(data, index) in allImpressies" :key="index">
             <div class="bg-blue-100 shadow-top">
-                <div class="container mx-auto"> 
-                    <div class="flex items-center mx-auto md:w-10/12 w-full md:py-32 py-8">
-                        <div class="flex justify-center items-center w-full">
-                            <div class="md:w-1/12 w-3/12" @click="prev">
-                                <img class="prev" src="../assets/Images/arrow_left.png"/>
-                            </div>
-                            <carousel @next="next" @prev="prev">
-                                <carousel-slide v-for="(slide, index) in slides" :key="slide" :index="index" :visibleSlide="visibleSlide"
-                                :direction="direction">
-                                <img :src="slide" />
-                                </carousel-slide> 
-                            </carousel>
-                            <div class="md:w-1/12 w-3/12" @click="next">
-                                <img class="next" src="../assets/Images/arrow_right.png"/>
-                            </div>
-                        </div>
+                <div class="container mx-auto md:py-32 py-8"> 
+                  <div class="flex md:flex-row flex-col items-center mx-auto md:w-10/12 w-full">
+                    <div class="md:w-6/12 w-full md:mr-4 mr-0">
+                      <h1>
+                        {{ data.contentmatrix[0].titel }}
+                      </h1>
+                      <p class="w-full leading-7 mt-4 mb-12">
+                        {{ data.contentmatrix[0].tekst }}
+                      </p>
                     </div>
+                  </div>
+                  <swiper />
                 </div>
             </div>
         </div>
@@ -27,65 +22,21 @@
 
 <script>
 import gql from 'graphql-tag';
-import Carousel from '../components/Carousel.vue'
-import CarouselSlide from '../components/CarouselSlide.vue'
+import swiper from '~/components/Swiper'
 
 export default {
-    components: {
-        Carousel,
-        CarouselSlide
-    },
-    data() {
-    return {
-      slides: [
-        'https://www.datocms-assets.com/37434/1605298197-20100327a.jpg',
-        'https://www.datocms-assets.com/37434/1605298200-20100327b.jpg',
-        'https://www.datocms-assets.com/37434/1605298203-20100327c.jpg',
-        'https://www.datocms-assets.com/37434/1605298205-20100327d.jpg'
-
-      ],
-      visibleSlide: 0,
-      direction: 'left',
-
-    }
+  components: {
+    swiper
   },
-  computed: {
-    slideLen() {
-      return this.slides.length
-    }
-  },
-  methods: {
-    next() {
-      if(this.visibleSlide >= this.slideLen - 1) {
-        this.visibleSlide = 0;
-      }
-      else {
-        this.visibleSlide++;
-      }
-      this.direction = "left"
-    },
-    prev () {
-      if(this.visibleSlide <= 0) {
-        this.visibleSlide = this.slideLen - 1;
-      }
-      else {
-        this.visibleSlide--;
-      }
-      this.direction = "right"
-    },
-  },
-    apollo: {
-        allImpressies: gql`{
-            allImpressies {
-                contentmatrix {
-                    titel
-                    tekst
-                    afbeeldingnaasttekst {
-                        url
-                    }
-                }
+  apollo: {
+    allImpressies: gql`{
+        allImpressies {
+            contentmatrix {
+                titel
+                tekst
             }
-        }`
-    },
+        }
+    }`
+  }
 }
 </script>

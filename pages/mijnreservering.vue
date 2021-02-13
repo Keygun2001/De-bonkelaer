@@ -1,14 +1,14 @@
 <template>
     <div>
-        <div v-for="(reservering, index) in allMijnReserverings" :key="index" class="bg-blue-100 shadow-lg">
+        <div v-for="(data, index) in allMijnReserverings" :key="index" class="bg-blue-100 shadow-lg">
             <div class="container mx-auto lg:py-32 py-8">
                 <div class="flex lg:flex-row flex-col items-center mx-auto lg:w-10/12 w-full mb-12">
                     <div class="lg:w-6/12 w-full">
                         <h1>
-                            {{ reservering.titel }}
+                            {{ data.titel }}
                         </h1>
                         <p class="mt-4">
-                            {{ reservering.tekst }}
+                            {{ data.tekst }}
                         </p>
                     </div>
                 </div>
@@ -16,25 +16,25 @@
                     <table v-if="aanpassen == false" class="reserveringtable lg:inline flex lg:w-9/12 w-full">
                         <tr class="rev">
                             <td>
-                                {{ reservering.reservering[0].lidnummer }}
+                                {{ data.contentmatrix[0].lidnummer }}
                             </td>
                             <td>
-                                {{ reservering.reservering[0].baan }}
+                                {{ data.contentmatrix[0].baan }}
                             </td>
                             <td>
-                                {{ reservering.reservering[0].medespeler1 }}
+                                {{ data.contentmatrix[0].medespeler1 }}
                             </td>
                             <td>
-                                {{ reservering.reservering[0].medespeler2 }}
+                                {{ data.contentmatrix[0].medespeler2 }}
                             </td>
                             <td>
-                                {{ reservering.reservering[0].medespeler3 }}
+                                {{ data.contentmatrix[0].medespeler3 }}
                             </td>
                             <td>
-                                {{ reservering.reservering[0].datum }}
+                                {{ data.contentmatrix[0].datum }}
                             </td>
                             <td>
-                                {{ reservering.reservering[0].tijd }}
+                                {{ data.contentmatrix[0].tijd }}
                             </td>
                         </tr>
                         <tr class="rev">
@@ -64,25 +64,25 @@
                     <table v-else class="reserveringtable lg:inline flex w-full">
                         <tr class="rev">
                             <td>
-                                {{ reservering.reservering[0].lidnummer }}
+                                {{ data.contentmatrix[0].lidnummer }}
                             </td>
                             <td>
-                                {{ reservering.reservering[0].baan }}
+                                {{ data.contentmatrix[0].baan }}
                             </td>
                             <td>
-                                {{ reservering.reservering[0].medespeler1 }}
+                                {{ data.contentmatrix[0].medespeler1 }}
                             </td>
                             <td>
-                                {{ reservering.reservering[0].medespeler2 }}
+                                {{ data.contentmatrix[0].medespeler2 }}
                             </td>
                             <td>
-                                {{ reservering.reservering[0].medespeler3 }}
+                                {{ data.contentmatrix[0].medespeler3 }}
                             </td>
                             <td>
-                                {{ reservering.reservering[0].datum }}
+                                {{ data.contentmatrix[0].datum }}
                             </td>
                             <td>
-                                {{ reservering.reservering[0].tijd }}
+                                {{ data.contentmatrix[0].tijd }}
                             </td>
                         </tr>
                         <tr class="rev">
@@ -120,17 +120,17 @@
                 </div>
                 <div v-if="geenmedespeler">
                     <div class="lg:py-0 py-8 lg:block flex justify-center w-10/12 mx-auto" v-if="aanpassen == false">
-                            <button @click="aanpassen = !aanpassen" class="downloadbtn">{{ reservering.aanpassenKnop }}</button>
+                            <button @click="aanpassen = !aanpassen" class="downloadbtn">{{ data.aanpassenKnop }}</button>
                         </div>
                     <div class="lg:py-0 py-8 lg:block flex justify-center items-center w-10/12 mx-auto" v-else>
-                        <button @click="reserveren" class="downloadbtn lg:mt-4 mt-0">{{ reservering.doorvoerenKnop }}</button>
+                        <button @click="reserveren" class="downloadbtn lg:mt-4 mt-0">{{ data.doorvoerenKnop }}</button>
                         <button @click="verwijderen" class="flex items-center verwijder lg:py-4 py-0 lg:ml-0 ml-4">
                             <div class="kruis">
                                 <div class="een"></div>
                                 <div class="twee"></div>
                             </div>
                             <p class="rodetekst">
-                                {{ reservering.verwijderen }}
+                                {{ data.verwijderenKnop }}
                             </p>
                         </button>
                     </div>
@@ -1221,7 +1221,7 @@ export default {
                 tekst
                 baanEen
                 baanTwee
-                reservering {
+                contentmatrix {
                     lidnummer
                     medespeler1
                     medespeler2
@@ -1232,7 +1232,7 @@ export default {
                 }
                 aanpassenKnop
                 doorvoerenKnop
-                verwijderen
+                verwijderenKnop
             }
         }`
     }    

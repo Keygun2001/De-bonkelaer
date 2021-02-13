@@ -4,25 +4,22 @@
             <div class="bg-blue-100 shadow-lg">
                 <div class="container mx-auto">
                     <div class="flex items-center md:mx-auto md:w-10/12 w-full md:py-32 py-8">
-                        <div class="md:w-6/12 w-full md:mr-4">
+                        <div class="md:w-10/12 w-full md:mr-4">
                             <h1>
-                                {{ data.titeltekst[0].titel }}
+                                {{ data.contentmatrix[0].titel }}
                             </h1>
                             <p v-if="isAdmin" class="w-full leading-7 mt-4">
-                                {{ data.titeltekst[0].tekst }} {{ voornaam }} {{ achternaam }} {{ data.tekst2admin }}
+                                {{ data.contentmatrix[0].tekst }} {{ voornaam }} {{ achternaam }} {{ data.tekst2admin }}
                             </p>
                             <p v-else class="w-full leading-7 mt-4">
-                                {{ data.titeltekst[0].tekst }} {{ voornaam }} {{ achternaam }} {{ data.tekst2 }}
+                                {{ data.contentmatrix[0].tekst }} {{ voornaam }} {{ achternaam }} {{ data.tekst2 }}
                             </p>
                             <div class="mt-8">
                                 <div v-if="isAdmin">
                                     <NuxtLink to="/allereserveringen" class="reserveringadmin">{{ data.allreserveringen }}</NuxtLink>
                                     <NuxtLink to="/gebruikertoevoegen" class="reserveringadmin mt-4">{{ data.gebruikerToevoegen }}</NuxtLink>
-                                    <NuxtLink to="/mijnreservering" class="reservering mt-4">{{ data.mijnreserveringen }}</NuxtLink>
                                 </div>
-                                <div v-else>
-                                    <NuxtLink to="/mijnreservering" class="reservering">{{ data.mijnreserveringen }}</NuxtLink>
-                                </div>
+                                <NuxtLink to="/mijnreservering" class="reservering mt-4">{{ data.mijnreserveringen }}</NuxtLink>
                             </div>
                         </div>
                     </div>
@@ -32,10 +29,10 @@
                 <div class="flex items-center mx-auto md:w-10/12 w-full md:pt-32 pt-8 mb-8">
                     <div class="w-full">
                         <h1>
-                            {{ data.titeltekst[1].titel }}
+                            {{ data.contentmatrix[1].titel }}
                         </h1>
                         <p class="leading-7 mt-4 md:w-10/12 w-full">
-                            {{ data.titeltekst[1].tekst }}
+                            {{ data.contentmatrix[1].tekst }}
                         </p>
                     </div>
                 </div>
@@ -44,31 +41,31 @@
                         <client-only>
                             <div class="revall">
                                 <tr class="flex flex-col">
-                                    {{ data.tabel[0].lidnummer }}
+                                    {{ data.contentmatrix[0].lidnummer }}
                                     <td v-for="(item, index) in lidnummers" :key="index" v-html="lidnummers[index]"></td>  
                                 </tr>
                                 <tr class="flex flex-col">
-                                    {{ data.tabel[0].baan }}
+                                    {{ data.contentmatrix[0].baan }}
                                     <td v-for="(item, index) in banen" :key="index" v-html="banen[index]"></td>  
                                 </tr>
                                 <tr class="flex flex-col">
-                                    {{ data.tabel[0].medespeler1 }}
+                                    {{ data.contentmatrix[0].medespeler1 }}
                                     <td v-for="(item, index) in medespeler1s" :key="index" v-html="medespeler1s[index]"></td>  
                                 </tr>
                                 <tr class="flex flex-col">
-                                    {{ data.tabel[0].medespeler2 }}
+                                    {{ data.contentmatrix[0].medespeler2 }}
                                     <td v-for="(item, index) in medespeler2s" :key="index" v-html="medespeler2s[index]"></td>  
                                 </tr>
                                 <tr class="flex flex-col">
-                                    {{ data.tabel[0].medespeler3 }}
+                                    {{ data.contentmatrix[0].medespeler3 }}
                                     <td v-for="(item, index) in medespeler3s" :key="index" v-html="medespeler3s[index]"></td>  
                                 </tr>
                                 <tr class="flex flex-col">
-                                    {{ data.tabel[0].datum }}
+                                    {{ data.contentmatrix[0].datum }}
                                     <td v-for="(item, index) in datums" :key="index" v-html="datums[index]"></td>  
                                 </tr>
                                 <tr class="flex flex-col">
-                                    {{ data.tabel[0].tijd }}
+                                    {{ data.contentmatrix[0].tijd }}
                                     <td v-for="(item, index) in gekozentijden" :key="index" v-html="gekozentijden[index]"></td>  
                                 </tr>
                             </div>
@@ -79,43 +76,43 @@
                             <div class="revall">
                                 <tr class="flex">
                                     <div class="w-6/12">
-                                        {{ data.tabel[0].lidnummer }}
+                                        {{ data.contentmatrix[0].lidnummer }}
                                     </div>
                                     <td class="w-6/12" v-for="(item, index) in lidnummers" :key="index" v-html="lidnummers[index]"></td>  
                                 </tr>
                                 <tr class="flex">
                                     <div class="w-6/12">
-                                        {{ data.tabel[0].baan }}
+                                        {{ data.contentmatrix[0].baan }}
                                     </div>
                                     <td class="w-6/12" v-for="(item, index) in banen" :key="index" v-html="banen[index]"></td>  
                                 </tr>
                                 <tr class="flex">
                                     <div class="w-6/12">
-                                        {{ data.tabel[0].medespeler1 }}
+                                        {{ data.contentmatrix[0].medespeler1 }}
                                     </div>
                                     <td class="w-6/12" v-for="(item, index) in medespeler1s" :key="index" v-html="medespeler1s[index]"></td>  
                                 </tr>
                                 <tr class="flex">
                                     <div class="w-6/12">
-                                        {{ data.tabel[0].medespeler2 }}
+                                        {{ data.contentmatrix[0].medespeler2 }}
                                     </div>
                                     <td class="w-6/12" v-for="(item, index) in medespeler2s" :key="index" v-html="medespeler2s[index]"></td>  
                                 </tr>
                                 <tr class="flex">
                                     <div class="w-6/12">
-                                        {{ data.tabel[0].medespeler3 }}
+                                        {{ data.contentmatrix[0].medespeler3 }}
                                     </div>
                                     <td class="w-6/12" v-for="(item, index) in medespeler3s" :key="index" v-html="medespeler3s[index]"></td>  
                                 </tr>
                                 <tr class="flex">
                                     <div class="w-6/12">
-                                        {{ data.tabel[0].datum }}
+                                        {{ data.contentmatrix[0].datum }}
                                     </div>
                                     <td class="w-6/12" v-for="(item, index) in datums" :key="index" v-html="datums[index]"></td>  
                                 </tr>
                                 <tr class="flex">
                                     <div class="w-6/12">
-                                        {{ data.tabel[0].tijd }}
+                                        {{ data.contentmatrix[0].tijd }}
                                     </div>
                                     <td class="w-6/12" v-for="(item, index) in gekozentijden" :key="index" v-html="gekozentijden[index]"></td>  
                                 </tr>
@@ -2005,7 +2002,7 @@ export default {
     apollo: {
         allIngelogds: gql`{
             allIngelogds {
-                titeltekst {
+                contentmatrix {
                     titel
                     tekst
                 }
@@ -2027,7 +2024,7 @@ export default {
             allAlleReserveringens {
                 titel
                 tekst
-                tabel {
+                contentmatrix {
                     lidnummer
                     baan
                     medespeler1

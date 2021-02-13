@@ -15,7 +15,7 @@
                     </NuxtLink>
                 </div>
                 <div class="md:w-6/12 w-full md:mt-0 mt-8">
-                    <img class="md:w-10/12 w-full" :src="data.afbeeldingNaastTekst.url" />
+                    <img class="md:w-10/12 w-full" :src="data.afbeelding.url" />
                 </div>
             </div>
         </div>
@@ -35,7 +35,7 @@ import gql from 'graphql-tag'
                 titel
                 tekst
                 link
-                afbeeldingNaastTekst {
+                afbeelding {
                     url
                 }
             }

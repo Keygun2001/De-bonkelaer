@@ -32,7 +32,7 @@
                             </p>
                             <div class="flex md:justify-center md:flex-no-wrap flex-wrap">
                                 <p class="mr-4 md:mt-0 mt-4 nuxtfooterlink">
-                                    {{ footer[0].adres1 }}
+                                    {{ footer[0].adres }}
                                 </p>
                                 <p class="md:mx-4 mx-0 md:mt-0 mt-4 nuxtfooterlink">
                                     {{ footer[0].adres2 }}
@@ -72,7 +72,7 @@ export default {
     apollo: {
         footer: gql`{
             footer {
-                footerTekstLinks {
+                titelLink {
                     titel
                     link1
                     link2
@@ -80,9 +80,9 @@ export default {
                     link4
                     link5
                 }
-                footerTekstRechts {
+                adressen {
                     titel2
-                    adres1
+                    adres
                     adres2
                     adres3
                 }

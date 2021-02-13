@@ -9,25 +9,7 @@
                                 {{ data.paginaTitel }}
                             </h1>
                             <p class="w-full leading-7 mt-4">
-                                {{ data.welkom }}
-                            </p>
-                            <p class="w-full leading-7 mt-4">
-                                {{ data.stap1 }}
-                            </p>
-                            <p class="w-full leading-7 mt-4">
-                                {{ data.stap2 }}
-                            </p>
-                            <p class="w-full leading-7 mt-4">
-                                {{ data.stap3 }}
-                            </p>
-                            <p class="w-full leading-7 mt-4">
-                                {{ data.stap4 }}
-                            </p>
-                            <p class="w-full leading-7 mt-4">
-                                {{ data.stap5 }}
-                            </p>
-                            <p class="w-full leading-7 mt-4">
-                                {{ data.stap6 }}
+                                {{ data.tekst }}
                             </p>
                         </div>
                         <div class="mt-8">
@@ -47,24 +29,11 @@ export default {
     components: {
         formulier
     },
-    apollo: {
+    apollo: { 
         allGebruikersToevoegens: gql`{
             allGebruikersToevoegens {
                 paginaTitel
-                welkom
-                stap1
-                stap2
-                stap3
-                stap4
-                stap5
-                stap6
-                formulier {
-                    voornaam
-                    achternaam
-                    email
-                    lidnummer
-                    toevoegen
-                }
+                tekst
             }
         }`
     },

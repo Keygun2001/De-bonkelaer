@@ -3,26 +3,26 @@
         <div v-for="(data, index) in allGebruikersToevoegens" :key="index">
             <form @submit.prevent="submit">
                 <p>
-                    {{ data.formulier[0].voornaam }}
+                    {{ data.contentmatrix[0].voornaam }}
                 </p>
                 <input class="rounded inputbox my-4" v-model="voornaam" type="text" name="voornaam"/>
                 <p>
-                    {{ data.formulier[0].achternaam }}
+                    {{ data.contentmatrix[0].achternaam }}
                 </p>
                 <input class="rounded inputbox my-4" v-model="achternaam" type="text" name="achternaam"/>
                 <p>
-                    {{ data.formulier[0].email }}
+                    {{ data.contentmatrix[0].email }}
                 </p>
                 <input class="rounded inputbox my-4" v-model="email" type="email" name="email"/>
                 <p>
-                    {{ data.formulier[0].lidnummer }}
+                    {{ data.contentmatrix[0].lidnummer }}
                 </p>
                 <input class="rounded inputbox my-4" v-model="lidnummer" type="number" name="lidnummer"/>
                 <p>
-                    {{ data.formulier[0].admin }}
+                    {{ data.contentmatrix[0].isAdmin }}
                 </p>
-                <input @click="isAdmin" class="my-4" type="checkbox" name="lidnummer"/>
-                <input class="downloadbtn my-8" type="submit" :value="data.formulier[0].toevoegen" />
+                <input class="my-4" type="checkbox" name="lidnummer"/>
+                <input class="downloadbtn my-8" type="submit" :value="data.contentmatrix[0].toevoegen" />
             </form>
             <div>
                 <p class="rodetekst">
@@ -57,28 +57,18 @@ export default {
     apollo: {
         allGebruikersToevoegens: gql`{
             allGebruikersToevoegens {
-                paginaTitel
-                formulier {
+                contentmatrix {
                     voornaam
                     achternaam
                     email
                     lidnummer
-                    toevoegen
-                    admin
+                    isAdmin
+                    aanmakenKnop
                 }
             }
         }`
     },
     methods: {
-        isAdmin: function() {
-            if(this.admin == false) {
-                this.admin = true
-                console.log(this.admin)
-            } else {
-                this.admin = false
-                console.log(this.admin)
-            }
-        },
         submit: function() {
             const gebruikersref = firebase.database().ref('Gebruikers/')
             var self = this
