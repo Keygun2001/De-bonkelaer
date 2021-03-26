@@ -145,8 +145,8 @@ export default {
         console.log(data);
         this.$router.replace({name: 'reserveren'})
         this.ingelogd = false;
-      } catch {
-
+      } catch(err) {
+        console.log(err);
       }
     },
   },

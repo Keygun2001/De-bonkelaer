@@ -245,8 +245,13 @@ export default {
                     self.achternaam = data.Achternaam;
                     self.lidnummer = data.Lidnummer;
                     self.isAdmin = data.IsAdmin
-                }
+                } 
             });
+            medespelers.sort(function(a, b) {
+                if(a < b) { return -1}
+                if(a > b) { return 1 }
+                return 0
+            })
             self.medespelers = medespelers; 
         });
 

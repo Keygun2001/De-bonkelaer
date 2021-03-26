@@ -100,7 +100,7 @@ export default {
         async pressed() {
             try {
                 await firebase.auth().signInWithEmailAndPassword(this.email, this.password);
-                this.$router.replace({name: "ingelogd"})
+                this.$router.replace({name: "index"})
             }catch(err){
                 this.error = err.message
             };

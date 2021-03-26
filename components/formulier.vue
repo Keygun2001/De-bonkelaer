@@ -15,6 +15,10 @@
                 </p>
                 <input class="rounded inputbox my-4" v-model="email" type="email" name="email"/>
                 <p>
+                    {{ data.contentmatrix[0].password }}
+                </p>
+                <input class="rounded inputbox my-4" v-model="wachtwoord" type="password" name="password"/>
+                <p>
                     {{ data.contentmatrix[0].lidnummer }}
                 </p>
                 <input class="rounded inputbox my-4" v-model="lidnummer" type="number" name="lidnummer"/>
@@ -39,7 +43,7 @@
 <script>
 import gql from 'graphql-tag'
 import firebase from 'firebase'
-import 'firebase/auth'
+import auth from 'firebase/auth'
 
 export default {
 
@@ -48,6 +52,7 @@ export default {
             voornaam: '',
             achternaam: '',
             email: '',
+            wachtwoord: '',
             lidnummer: '',
             error: '',
             beschikbaar: '',
@@ -61,6 +66,7 @@ export default {
                     voornaam
                     achternaam
                     email
+                    password
                     lidnummer
                     isAdmin
                     aanmakenKnop
@@ -109,6 +115,7 @@ export default {
                     });
                 }
             });
+            firebase.auth().createUserWithEmailAndPassword(this.email, this.wachtwoord)
         }
     }
 }
