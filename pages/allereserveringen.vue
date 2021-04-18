@@ -162,27 +162,31 @@ export default {
                 self.datum = data.Datum
                 self.tijd = data.Tijd
 
-                lidnummers.push(
-                    "<td>" + data.Lidnummer + "</td>"
-                )
-                banen.push(
-                   "<td>" + data.Baan + "</td>"
-                )
-                medespeler1s.push(
-                    "<td>" + data.Medespeler1 + "</td>"
-                )
-                medespeler2s.push(
-                    "<td>" + data.Medespeler2 + "</td>"
-                )
-                medespeler3s.push(
-                    "<td>" + data.Medespeler3 + "</td>"
-                )
-                datums.push(
-                    "<td>" + data.Datum + "</td>"
-                )
-                tijden.push(
-                    "<td>" + data.Tijd + "</td>"
-                )
+                if(data.Lidnummer) {
+                    if(data.Lidnummer != '923483927598') {
+                        lidnummers.push(
+                            "<td>" + data.Lidnummer + "</td>"
+                        )
+                        banen.push(
+                            "<td>" + data.Baan + "</td>"
+                        )
+                        medespeler1s.push(
+                            "<td>" + data.Medespeler1 + "</td>"
+                        )
+                        medespeler2s.push(
+                            "<td>" + data.Medespeler2 + "</td>"
+                        )
+                        medespeler3s.push(
+                            "<td>" + data.Medespeler3 + "</td>"
+                        )
+                        datums.push(
+                            "<td>" + data.Datum + "</td>"
+                        )
+                        tijden.push(
+                            "<td>" + data.Tijd + "</td>"
+                        )
+                    }
+                }
 
             });
             self.lidnummers = lidnummers; 

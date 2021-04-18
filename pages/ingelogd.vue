@@ -16,7 +16,9 @@
                             </p>
                             <div class="mt-8">
                                 <div v-if="isAdmin">
-                                    <NuxtLink to="/allereserveringen" class="reserveringadmin">{{ data.allreserveringen }}</NuxtLink>
+                                    <div class="lg:block hidden">
+                                        <NuxtLink to="/allereserveringen" class="reserveringadmin">{{ data.allreserveringen }}</NuxtLink>
+                                    </div>
                                     <NuxtLink to="/gebruikertoevoegen" class="reserveringadmin mt-4">{{ data.gebruikerToevoegen }}</NuxtLink>
                                 </div>
                                 <NuxtLink to="/mijnreservering" class="reservering mt-4">{{ data.mijnreserveringen }}</NuxtLink>
@@ -67,54 +69,6 @@
                                 <tr class="flex flex-col">
                                     {{ data.contentmatrix[0].tijd }}
                                     <td v-for="(item, index) in gekozentijden" :key="index" v-html="gekozentijden[index]"></td>  
-                                </tr>
-                            </div>
-                        </client-only>
-                    </table>
-                    <table class="lg:hidden block reserveringtable">
-                        <client-only>
-                            <div class="revall">
-                                <tr class="flex">
-                                    <div class="w-6/12">
-                                        {{ data.contentmatrix[0].lidnummer }}
-                                    </div>
-                                    <td class="w-6/12" v-for="(item, index) in lidnummers" :key="index" v-html="lidnummers[index]"></td>  
-                                </tr>
-                                <tr class="flex">
-                                    <div class="w-6/12">
-                                        {{ data.contentmatrix[0].baan }}
-                                    </div>
-                                    <td class="w-6/12" v-for="(item, index) in banen" :key="index" v-html="banen[index]"></td>  
-                                </tr>
-                                <tr class="flex">
-                                    <div class="w-6/12">
-                                        {{ data.contentmatrix[0].medespeler1 }}
-                                    </div>
-                                    <td class="w-6/12" v-for="(item, index) in medespeler1s" :key="index" v-html="medespeler1s[index]"></td>  
-                                </tr>
-                                <tr class="flex">
-                                    <div class="w-6/12">
-                                        {{ data.contentmatrix[0].medespeler2 }}
-                                    </div>
-                                    <td class="w-6/12" v-for="(item, index) in medespeler2s" :key="index" v-html="medespeler2s[index]"></td>  
-                                </tr>
-                                <tr class="flex">
-                                    <div class="w-6/12">
-                                        {{ data.contentmatrix[0].medespeler3 }}
-                                    </div>
-                                    <td class="w-6/12" v-for="(item, index) in medespeler3s" :key="index" v-html="medespeler3s[index]"></td>  
-                                </tr>
-                                <tr class="flex">
-                                    <div class="w-6/12">
-                                        {{ data.contentmatrix[0].datum }}
-                                    </div>
-                                    <td class="w-6/12" v-for="(item, index) in datums" :key="index" v-html="datums[index]"></td>  
-                                </tr>
-                                <tr class="flex">
-                                    <div class="w-6/12">
-                                        {{ data.contentmatrix[0].tijd }}
-                                    </div>
-                                    <td class="w-6/12" v-for="(item, index) in gekozentijden" :key="index" v-html="gekozentijden[index]"></td>  
                                 </tr>
                             </div>
                         </client-only>
@@ -293,27 +247,29 @@ export default {
                     timestampdate = timestampyear.toString() + "-" + timestampmonth.toString() + "-" + timestampday.toString()
                 }
                 if(data.Lidnummer) {
-                    lidnummers.push(
-                        "<td>" + data.Lidnummer + "</td>"
-                    )
-                    banen.push(
-                        "<td>" + data.Baan + "</td>"
-                    )
-                    medespeler1s.push(
-                        "<td>" + data.Medespeler1 + "</td>"
-                    )
-                    medespeler2s.push(
-                        "<td>" + data.Medespeler2 + "</td>"
-                    )
-                    medespeler3s.push(
-                        "<td>" + data.Medespeler3 + "</td>"
-                    )
-                    datums.push(
-                        "<td>" + data.Datum + "</td>"
-                    )
-                    gekozentijden.push(
-                        "<td>" + data.Tijd + "</td>"
-                    )
+                    if(data.Lidnummer != '923483927598') {
+                        lidnummers.push(
+                            "<td>" + data.Lidnummer + "</td>"
+                        )
+                        banen.push(
+                            "<td>" + data.Baan + "</td>"
+                        )
+                        medespeler1s.push(
+                            "<td>" + data.Medespeler1 + "</td>"
+                        )
+                        medespeler2s.push(
+                            "<td>" + data.Medespeler2 + "</td>"
+                        )
+                        medespeler3s.push(
+                            "<td>" + data.Medespeler3 + "</td>"
+                        )
+                        datums.push(
+                            "<td>" + data.Datum + "</td>"
+                        )
+                        gekozentijden.push(
+                            "<td>" + data.Tijd + "</td>"
+                        )
+                    }
                 }
             });
             self.lidnummers = lidnummers; 

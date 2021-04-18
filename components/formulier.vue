@@ -25,7 +25,7 @@
                 <p>
                     {{ data.contentmatrix[0].isAdmin }}
                 </p>
-                <input class="my-4" type="checkbox" name="lidnummer"/>
+                <input class="my-4 admin" type="checkbox" name="admin" v-model="admin"/>
                 <input class="downloadbtn my-8" type="submit" :value="data.contentmatrix[0].toevoegen" />
             </form>
             <div>
