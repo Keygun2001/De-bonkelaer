@@ -12,19 +12,17 @@
                         </p>
                     </div>
                     <div class="mt-8">
-                        <form>
-                            <div class="flex items-center">
-                                <p>
-                                    {{ data.emailinput }}
-                                </p>
-                                <input placeholder="uwnaam@gmail.com" class="ml-4 inputbox rounded" type="email" v-model="emailadres" required> 
-                            </div>
-                            <div class="mt-8">
-                                <button @click="Verzenden" class="downloadbtn">
-                                    {{ data.verzendenKnop }}
-                                </button>
-                            </div>
-                        </form>
+                        <div class="flex items-center">
+                            <p>
+                                {{ data.emailinput }}
+                            </p>
+                            <input placeholder="uwnaam@gmail.com" class="ml-4 inputbox rounded" type="email" v-model="emailadres" required> 
+                        </div>
+                        <div class="mt-8">
+                            <button @click="Verzenden" class="downloadbtn">
+                                {{ data.verzendenKnop }}
+                            </button>
+                        </div>
                     </div>
                     <div v-if="error || succesvol">
                         <p class="rodetekst">
