@@ -223,6 +223,8 @@ export default {
             var timestampdate = timestampyear.toString() + "-" + timestampmonth.toString() + "-" + timestampday.toString()
             const timestamptime = timestamphours.toString() + ":00-" + timestamphourplus1.toString() + ":00"
 
+            console.log(timestampdate)
+
             var email = self.email
             let datadatum = ""
             let datatijd = ""
@@ -248,27 +250,30 @@ export default {
                 }
                 if(data.Lidnummer) {
                     if(data.Lidnummer != '923483927598') {
-                        lidnummers.push(
-                            "<td>" + data.Lidnummer + "</td>"
-                        )
-                        banen.push(
-                            "<td>" + data.Baan + "</td>"
-                        )
-                        medespeler1s.push(
-                            "<td>" + data.Medespeler1 + "</td>"
-                        )
-                        medespeler2s.push(
-                            "<td>" + data.Medespeler2 + "</td>"
-                        )
-                        medespeler3s.push(
-                            "<td>" + data.Medespeler3 + "</td>"
-                        )
-                        datums.push(
-                            "<td>" + data.Datum + "</td>"
-                        )
-                        gekozentijden.push(
-                            "<td>" + data.Tijd + "</td>"
-                        )
+                        if(timestampdate > data.Datum) {
+                        } else {
+                            lidnummers.push(
+                                "<td>" + data.Lidnummer + "</td>"
+                            )
+                            banen.push(
+                                "<td>" + data.Baan + "</td>"
+                            )
+                            medespeler1s.push(
+                                "<td>" + data.Medespeler1 + "</td>"
+                            )
+                            medespeler2s.push(
+                                "<td>" + data.Medespeler2 + "</td>"
+                            )
+                            medespeler3s.push(
+                                "<td>" + data.Medespeler3 + "</td>"
+                            )
+                            datums.push(
+                                "<td>" + data.Datum + "</td>"
+                            )
+                            gekozentijden.push(
+                                "<td>" + data.Tijd + "</td>"
+                            )
+                        }
                     }
                 }
             });
@@ -422,7 +427,10 @@ export default {
                     if(self.datum == data.Datum) {
                         datadatum = data.Datum
                         if(self.gekozentijd == data.Tijd) {
-                            datatijd = data.Tijd
+                            if(self.court == data.Baan) {
+                                databaan = data.Baan
+                                datatijd = data.Tijd
+                            }
                         }
                     }
                     if(self.court == data.Afschermbaan) {
@@ -1222,7 +1230,7 @@ export default {
                                 self.succesvol = 'baan beschikbaar'
                                 if(datum == datadatum) {
                                     self.succesvol = "datum beschikbaar"
-                                    if(tijd == datatijd) {
+                                    if(tijd == datatijd ) {
                                         self.error = "Deze tijd is helaas niet beschikbaar op deze baan kies een andere tijd/baan"
                                         self.succesvol = ""
                                     } else {
@@ -1301,7 +1309,7 @@ export default {
                                 self.succesvol = 'baan beschikbaar'
                                 if(datum == datadatum) {
                                     self.succesvol = "datum beschikbaar"
-                                    if(tijd == datatijd) {
+                                    if(tijd == datatijd ) {
                                         self.error = "Deze tijd is helaas niet beschikbaar op deze baan kies een andere tijd/baan"
                                         self.succesvol = ""
                                     } else {
@@ -1380,7 +1388,7 @@ export default {
                                 self.succesvol = 'baan beschikbaar'
                                 if(datum == datadatum) {
                                     self.succesvol = "datum beschikbaar"
-                                    if(tijd == datatijd) {
+                                    if(tijd == datatijd ) {
                                         self.error = "Deze tijd is helaas niet beschikbaar op deze baan kies een andere tijd/baan"
                                         self.succesvol = ""
                                     } else {
@@ -1459,7 +1467,7 @@ export default {
                                 self.succesvol = 'baan beschikbaar'
                                 if(datum == datadatum) {
                                     self.succesvol = "datum beschikbaar"
-                                    if(tijd == datatijd) {
+                                    if(tijd == datatijd ) {
                                         self.error = "Deze tijd is helaas niet beschikbaar op deze baan kies een andere tijd/baan"
                                         self.succesvol = ""
                                     } else {
@@ -1541,7 +1549,7 @@ export default {
                                             self.succesvol = 'baan beschikbaar'
                                             if(datum == datadatum) {
                                                 self.succesvol = "datum beschikbaar"
-                                                if(tijd == datatijd) {
+                                                if(tijd == datatijd ) {
                                                     self.error = "Deze tijd is helaas niet beschikbaar op deze baan kies een andere tijd/baan"
                                                     self.succesvol = ""
                                                 } else {
@@ -1621,7 +1629,7 @@ export default {
                                 self.succesvol = 'baan beschikbaar'
                                 if(datum == datadatum) {
                                     self.succesvol = "datum beschikbaar"
-                                    if(tijd == datatijd) {
+                                    if(tijd == datatijd ) {
                                         self.error = "Deze tijd is helaas niet beschikbaar op deze baan kies een andere tijd/baan"
                                         self.succesvol = ""
                                     } else {
@@ -1700,7 +1708,7 @@ export default {
                                 self.succesvol = 'baan beschikbaar'
                                 if(datum == datadatum) {
                                     self.succesvol = "datum beschikbaar"
-                                    if(tijd == datatijd) {
+                                    if(tijd == datatijd ) {
                                         self.error = "Deze tijd is helaas niet beschikbaar op deze baan kies een andere tijd/baan"
                                         self.succesvol = ""
                                     } else {
@@ -1779,7 +1787,7 @@ export default {
                                 self.succesvol = 'baan beschikbaar'
                                 if(datum == datadatum) {
                                     self.succesvol = "datum beschikbaar"
-                                    if(tijd == datatijd) {
+                                    if(tijd == datatijd ) {
                                         self.error = "Deze tijd is helaas niet beschikbaar op deze baan kies een andere tijd/baan"
                                         self.succesvol = ""
                                     } else {
@@ -1858,7 +1866,7 @@ export default {
                                 self.succesvol = 'baan beschikbaar'
                                 if(datum == datadatum) {
                                     self.succesvol = "datum beschikbaar"
-                                    if(tijd == datatijd) {
+                                    if(tijd == datatijd ) {
                                         self.error = "Deze tijd is helaas niet beschikbaar op deze baan kies een andere tijd/baan"
                                         self.succesvol = ""
                                     } else {

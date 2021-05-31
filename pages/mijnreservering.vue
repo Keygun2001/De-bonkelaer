@@ -61,7 +61,7 @@
                             </td>
                         </tr>
                     </table>
-                    <table v-else class="reserveringtable lg:inline flex w-full">
+                    <table v-else class="reserveringtable lg:inline flex">
                         <tr class="rev">
                             <td>
                                 {{ data.contentmatrix[0].lidnummer }}
@@ -93,25 +93,25 @@
                                 {{ baan }}
                             </td>
                             <td>
-                                <select v-model="medespeler1" class="inputbox rounded" required>
+                                <select v-model="medespeler1" class="inputbox rounded w-full" required>
                                     <option v-for="(option, z) in medespelers" :key="z">{{ medespelers[z] }}</option>
                                 </select>
                             </td>
                             <td>
-                                <select v-model="medespeler2" class="inputbox rounded" required>
+                                <select v-model="medespeler2" class="inputbox rounded w-full" required>
                                     <option v-for="(option, x) in medespelers" :key="x">{{ medespelers[x] }}</option>
                                 </select>
                             </td>
                             <td>
-                                <select v-model="medespeler3" class="inputbox rounded" required>
+                                <select v-model="medespeler3" class="inputbox rounded w-full" required>
                                     <option v-for="(option, y) in medespelers" :key="y">{{ medespelers[y] }}</option>
                                 </select>
                             </td>
                             <td>
-                                <input class="rounded inputbox" type="date" id="today" v-model="datum" required />
+                                <input class="rounded inputbox w-full" type="date" id="today" v-model="datum" required />
                             </td>
                             <td>
-                                <select v-model="tijd" class="inputbox rounded md:mt-0 mt-4" required>
+                                <select v-model="tijd" class="inputbox rounded md:mt-0 mt-4 w-full" required>
                                     <option v-for="(tijd, y) in tijden" :key="y">{{ tijden[y] }}</option>
                                 </select>
                             </td>
@@ -203,6 +203,11 @@ export default {
                     self.achternaam = data.Achternaam
                 }
             });
+            medespelers.sort(function(a, b) {
+                if(a < b) { return -1}
+                if(a > b) { return 1 }
+                return 0
+            })
             self.medespelers = medespelers;
         });
 
